@@ -22,7 +22,7 @@ import lombok.ToString;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+//@ToString
 @SequenceGenerator(name="att_seq", sequenceName="att_seq_id", initialValue=1, allocationSize=1)
 public class Attraction {
 	
@@ -38,4 +38,12 @@ public class Attraction {
 	
 	@OneToMany(mappedBy="attraction")
 	List<Reservation> reservations = new ArrayList<>();
+
+	@Override
+	public String toString() {
+		return "Attraction [attraction_id=" + attraction_id + ", location=" + location + ", height_limit="
+				+ height_limit + ", parent_yn=" + parent_yn + ", reservations=" + reservations + "]";
+	}
+	
+	
 }
