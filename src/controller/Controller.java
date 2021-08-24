@@ -10,47 +10,49 @@ import javax.persistence.EntityManager;
 import model.dao.ReservationDAO;
 import model.dto.Reservation;
 import util.PublicCommon;
+import view.EndView;
 
 public class Controller {
 	
 	/**
 	 * 예약정보 하나 불러오기
 	 */
-	public void reservationFind() throws SQLException {
-		Reservation r = ReservationDAO.getOneReservation(1l);
-		System.out.println("예약번호 : " + r.getReservationId());
-		System.out.println("예약인원 : " + r.getMemberCnt());
-		System.out.println("예약시간 : " + r.getTime());
-		System.out.println("예약 취소 가능 여부 : " + r.getCancelYN());
+	public void getOneReservation() throws SQLException {
+		EndView.getReservationList(ReservationDAO.getOneReservation(2l));
 	}
 	
 	
 	/**
 	 * 모든 예약정보 가져오기
 	 */
-	public void reservationAllFind() throws SQLException {
-		List<Reservation> rs = ReservationDAO.getAllReservation();
-		//주소값..........
-		rs.stream().forEach(v -> System.out.println(v));
+	public void getAllReservation() throws SQLException {
+		EndView.getReservationAllList(ReservationDAO.getAllReservation());
 	}
 	
 	
 	/**
 	 * 예약정보 취소하기
 	 */
-	public void reservationDelete() throws SQLException {
+	public void deleteReservation() throws SQLException {
 		EntityManager em = PublicCommon.getEntityManager();
 		
 		System.out.println("삭제 전 검색해보기");
-		Reservation reservation = em.find(Reservation.class, 3l);
-		System.out.println(reservation);
+		Reservation r = em.find(Reservation.class, 3l);
+		System.out.println("예약번호 : " + r.getReservationId() + 
+				   		   "\n예약인원 : " + r.getMemberCnt() + 
+				   		   "\n예약시간 : " + r.getTime() +
+				   		   "\n예약 취소 가능 여부 : " + r.getCancelYN()
+				   		   );
 		
-		ReservationDAO.reservationDelete();
+		ReservationDAO.deleteReservation();
 		
 		System.out.println("삭제 후 남은 예약리스트 검색해보기");
 		List<Reservation> rs = ReservationDAO.getAllReservation();
-		//주소값..........
-		rs.stream().forEach(v -> System.out.println(v));
+		rs.stream().forEach(v -> System.out.println("예약번호 : " + v.getReservationId() +
+													"\t예약시간 : " + v.getTime() + 
+													"\t예약인원 : " + v.getMemberCnt() + "명" + 
+													"\t예약 취소 가능 여부 : " + v.getCancelYN())
+							);
 	}
 	
 	
@@ -129,15 +131,16 @@ public class Controller {
 					System.out.println("예약내역을 조회하실 고객 이름을 입력해주세요.");
 					answer = sc.next();
 //					getRentList(answer);
-				}
-				System.out.println("예약번호를 입력해주세요.");
-				int rentId = 0;
-				try {
-					rentId = Integer.parseInt(sc.next());
-				} catch (NumberFormatException e) {
-					System.out.println("숫자로 입력해주세요");
-				}
+				}else {
+					System.out.println("예약번호를 입력해주세요.");
+					int rentId = 0;
+					try {
+						rentId = Integer.parseInt(sc.next());
+					} catch (NumberFormatException e) {
+						System.out.println("숫자로 입력해주세요");
+					}
 //				returnRent(rentId);
+				}
 
 			} else if (choice == 8) {
 				System.out.println("이름을 입력해주세요");
