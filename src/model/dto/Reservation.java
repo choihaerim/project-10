@@ -1,50 +1,56 @@
 package model.dto;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
+import javax.transaction.Transactional;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.Setter;
 
-@Data
-@AllArgsConstructor
 @NoArgsConstructor
-//@ToString
+@AllArgsConstructor
+@Setter
+@Getter
 @Entity
 @SequenceGenerator(name="res_seq", sequenceName="res_seq_id", initialValue=1, allocationSize=1)
 public class Reservation {
-	
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="res_seq")
-	private Long reservation_id;
+	@Column(name="reservation_id")
+	private Long reservationId;
 	
 	private String time;
 	
-	private int member_cnt;
+	@Column(name="member_cnt")
+	private int memberCnt;
 	
-	private String cancel_yn;
+	@Column(name="cancel_yn")
+	private String cancelYN;
 	
 	@ManyToOne//객체의 primary key 값을 자동 참조. name 태그는 컬럼명을 정의해 줄 뿐임.
 	@JoinColumn(name="attraction_id")
 	private Attraction attraction;
 	
-	@ManyToOne
+//	@ManyToOne
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="customer_id")
 	private Customer customer;
 
 	@Override
 	public String toString() {
-		return "Reservation [reservation_id=" + reservation_id + ", time=" + time + ", member_cnt=" + member_cnt
-				+ ", cancel_yn=" + cancel_yn + ", attraction=" + attraction.getAttraction_id() + ", customer=" + customer.getCustomer_id() + "]";
+		return "Reservation [reservationId=" + reservationId + ", time=" + time + ", memberCnt=" + memberCnt
+				+ ", cancelYN=" + cancelYN + ", attraction=" + attraction.getAttractionId() + ", customer=" + customer.getCustomerId() + "]";
 	}
-	
+
+
 	
 }
