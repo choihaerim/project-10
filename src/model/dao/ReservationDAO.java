@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
+import model.dto.Attraction;
 import model.dto.Reservation;
 import util.PublicCommon;
 
@@ -39,10 +40,10 @@ public class ReservationDAO {
 	public static Reservation getReservation(int reservationId) {
 		EntityManager em = PublicCommon.getEntityManager();
 		Reservation reservation = null;
-		
+
 		try {
 			reservation = em.find(Reservation.class, reservationId);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			em.close();
@@ -51,18 +52,20 @@ public class ReservationDAO {
 		return reservation;
 
 	}
-	
+
 	public static List<Reservation> getAllReservations() throws SQLException {
 		EntityManager em = PublicCommon.getEntityManager();
 
 		String jpql = "select r from Reservation r";
 		List<Reservation> all = em.createQuery(jpql).getResultList();
-		all.forEach(v -> System.out.println("=============\n"+"- 예약 ID : " + v.getReservationId() + "\n- 놀이기구 이름 : " + v.getAttraction().getName()
-				+"\n- 인원수 : "+ v.getMemberCnt() +"\n- 취소 가능 여부 : "+ v.getCancelYN() +"\n- 예약자 이름 : "+ v.getCustomer().getName() +"\n- 예약 시간 : "+ v.getTime()));
+		all.forEach(v -> System.out.println("=============\n" + "- 예약 ID : " + v.getReservationId()
+				+ "\n- 놀이기구 이름 : " + v.getAttraction().getName() + "\n- 인원수 : " + v.getMemberCnt()
+				+ "\n- 취소 가능 여부 : " + v.getCancelYN() + "\n- 예약자 이름: " + v.getCustomer().getName()
+				+ "\n- 예약 시간: " + v.getTime()));
 
 		em.close();
 		em = null;
-		
+
 		return all;
 	}
 
@@ -83,7 +86,28 @@ public class ReservationDAO {
 			em.close();
 			em = null;
 		}
+	}
 
+	// reservation id로 예약한 놀이기구 수정
+	public static void updateReservation(int reservationId, Attraction attraction) {
+		EntityManager em = PublicCommon.getEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		tx.begin();
+		
+		Reservation reservation = null;
+		
+		try {
+			reservation = em.find(Reservation.class, reservationId);
+			reservation.setAttraction(attraction);
+			
+			tx.commit();
+		} catch(Exception e) {
+			tx.rollback();
+			e.printStackTrace();
+		} finally {
+			em.close();
+			em = null;
+		}
 	}
 
 }
