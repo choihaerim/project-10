@@ -1,51 +1,77 @@
 package model.dao;
 
+import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Scanner;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
 import org.junit.jupiter.api.Test;
 
-import model.dto.Attraction;
 import model.dto.Customer;
 import model.dto.Reservation;
 import util.PublicCommon;
 
 public class ReservationDAO {
 	
-//	@Test
-	public void reservationInsert() {
+//	private static ReservationDAO instance = new ReservationDAO();
+//
+//	private ReservationDAO() {}
+//	
+//	public static ReservationDAO getInstance() {
+//		return instance;
+//	}
+	
+	public static void addReservation(Reservation res) {
 		EntityManager em = PublicCommon.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 		try {
-			Reservation res1 = new Reservation();
-			res1.setMemberCnt(3);
-			res1.setCancelYN("y");
-			res1.setTime("15:30");
+			Reservation reservation = new Reservation();
+
+			reservation.setMemberCnt(res.getMemberCnt());
+			reservation.setCancelYN(res.getCancelYN());
+			reservation.setTime(res.getTime());
+
+//			Customer cus1 = new Customer();
+//			cus1.setName("지원");
+//			cus1.setHeight(120);
+//			cus1.setAlarmYN("n");
+//			
+//			reservation.setCustomer(cus1);
 			
-			Attraction att1 = new Attraction();
-			Customer cus1 = new Customer();
-			
-			res1.setCustomer(cus1);
-			res1.setAttraction(att1);
-			
-			em.persist(res1);
-			em.persist(cus1);
-			em.persist(att1);
-			
+			reservation.setCustomer(res.getCustomer());
+			reservation.setAttraction(res.getAttraction());
+
+			em.persist(reservation);
+
 			tx.commit();
-		}catch(Exception e) {
+		} catch (Exception e) {
 			tx.rollback();
 			e.printStackTrace();
-		}finally {
+		} finally {
 			em.close();
 			em = null;
 		}
 	}
-	
+//	@Test
+	public void m0() {
+//		Scanner scan = new Scanner(new InputStreamReader(System.in));
+//		
+//		System.out.println("예약시간을 입력하세요.");
+//		String time = scan.next();
+//		System.out.println("예약인원을 입력하세요.");
+//		int count = Integer.parseInt(scan.next());
+//		System.out.println("취소가능여부 입력하세요.");
+//		String cancel = scan.next();
+		
+		Reservation reservation = new Reservation();
+		reservation.setTime("17:00");
+		reservation.setMemberCnt(4);
+		addReservation(reservation);
+	}
 	
 	
 	
@@ -71,11 +97,13 @@ public class ReservationDAO {
 //	@Test
 	public void m1() throws SQLException {
 		Reservation r = getOneReservation(2l);
-		System.out.println("예약번호 : " + r.getReservationId());
-		System.out.println("예약인원 : " + r.getMemberCnt());
-		System.out.println("예약시간 : " + r.getTime());
-		System.out.println("예약 취소 가능 여부 : " + r.getCancelYN());
+		System.out.println("||" + "예약번호 : " + r.getReservationId() + 
+						   "||" + "예약인원 : " + r.getMemberCnt() + "명" +
+						   "||" + "예약시간 : " + r.getTime() +
+						   "||" + "예약 취소 가능 여부 : " + r.getCancelYN() + "||"
+						   );
 	}
+	
 	
 	
 	
@@ -101,8 +129,14 @@ public class ReservationDAO {
 //	@Test
 	public void m2() throws SQLException {
 		List<Reservation> rs = getAllReservation();
-		//주소값..........
-		rs.stream().forEach(v -> System.out.println(v));
+		rs.stream().forEach(v -> System.out.println("||" + "예약번호 : " + v.getReservationId() + 
+													"||" + "예약시간 : " + v.getTime() + 
+													"||" + "예약인원 : " + v.getMemberCnt() + "명" + 
+													"||" + "예약 취소 가능 여부 : " + v.getCancelYN() + 
+													"||" + "예약 고객 이름 : " + v.getCustomer().getName() + 
+													"||" + "예약 고객 신장 : " + v.getCustomer().getHeight() + 
+													"||" + "예약 고객 알림 허용 여부 : " + v.getCustomer().getAlarmYN()  + "||"
+													));
 	}
 	
 	
@@ -111,7 +145,7 @@ public class ReservationDAO {
 	/**
 	 * 예약정보 수정하기
 	 */
-	public static void reservationUpdate() {
+	public static void updateReservation() {
 		EntityManager em = PublicCommon.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
@@ -134,7 +168,7 @@ public class ReservationDAO {
 		Reservation reservation = em.find(Reservation.class, 4l);
 		System.out.println(reservation);
 		
-		reservationDelete();
+		updateReservation();
 		
 		System.out.println("수정 후 검색해보기");
 		Reservation reservation_a = em.find(Reservation.class, 4l);
@@ -147,7 +181,7 @@ public class ReservationDAO {
 	/**
 	 * 예약정보 취소하기
 	 */
-	public static void reservationDelete() {
+	public static void deleteReservation() {
 		EntityManager em = PublicCommon.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
@@ -173,13 +207,11 @@ public class ReservationDAO {
 		Reservation reservation = em.find(Reservation.class, 3l);
 		System.out.println(reservation);
 		
-		reservationDelete();
+		deleteReservation();
 		
 		System.out.println("삭제 후 남은 예약리스트 검색해보기");
 		List<Reservation> rs = ReservationDAO.getAllReservation();
-		//주소값..........
-		rs.stream().forEach(v -> System.out.println(v));
-		
+		rs.stream().forEach(v -> System.out.println(v)); //주소값..........
 	}
 	
 	

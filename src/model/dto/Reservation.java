@@ -13,13 +13,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
 @Getter
-@ToString
 
 @Entity
 @SequenceGenerator(name="res_seq", sequenceName="res_seq_id", initialValue=1, allocationSize=1)
@@ -44,16 +42,5 @@ public class Reservation {
 	@ManyToOne
 	@JoinColumn(name="customer_id")
 	private Customer customer;
-	
-//	@Override
-//	public String toString() {
-//		StringBuilder builder = new StringBuilder();
-//		builder.append(super.toString());
-//		builder.append(reservationId);
-//		builder.append(time);
-//		builder.append(memberCnt);
-//		builder.append(cancelYN);
-//		return builder.toString();
-//	}
 }
 
