@@ -5,9 +5,9 @@ import javax.persistence.EntityTransaction;
 
 import org.junit.jupiter.api.Test;
 
-import model.Attraction;
-import model.Customer;
-import model.Reservation;
+import model.dto.Attraction;
+import model.dto.Customer;
+import model.dto.Reservation;
 import util.PublicCommon;
 
 public class RunTest {
