@@ -1,10 +1,13 @@
 package model;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,12 +19,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 @Entity
+@SequenceGenerator(name="res_seq", sequenceName="res_seq_id", initialValue=1, allocationSize=1)
 public class Reservation {
 	
 	@Id
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="res_seq")
 	private Long reservation_id;
-	
-	private Long costomer_id;
 	
 	private String time;
 	
@@ -29,7 +32,7 @@ public class Reservation {
 	
 	private String cancel_yn;
 	
-	@ManyToOne
+	@ManyToOne//객체의 primary key 값을 자동 참조. name 태그는 컬럼명을 정의해 줄 뿐임.
 	@JoinColumn(name="attraction_id")
 	private Attraction attraction;
 	
