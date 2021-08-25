@@ -9,7 +9,6 @@ import java.util.List;
 import model.dao.CustomerDAO;
 import model.dao.ReservationDAO;
 import model.dto.Customer;
-import model.dto.Reservation;
 import view.EndView;
 
 public class Controller {
@@ -71,16 +70,12 @@ public class Controller {
 	public static void deleteReservation(Long reservId) {
 
 		System.out.println("삭제 전 검색해보기");
-		Reservation r = ReservationDAO.getOneReservation(reservId);
-		System.out
-				.println("예약번호 : " + r.getReservationId() + "\n예약인원 : " + r.getMemberCnt() + "\n예약시간 : " + r.getTime());
+		EndView.allView(ReservationDAO.getOneReservation(reservId));
 
 		ReservationDAO.deleteReservation(reservId);
 
 		System.out.println("삭제 후 남은 예약리스트 검색해보기");
-		List<Reservation> rs = ReservationDAO.getAllReservation();
-		rs.stream().forEach(v -> System.out.println(
-				"예약번호 : " + v.getReservationId() + "\t예약시간 : " + v.getTime() + "\t예약인원 : " + v.getMemberCnt() + "명"));
+		EndView.showResListView(ReservationDAO.getAllReservation());
 	}
 
 	/**
@@ -160,10 +155,14 @@ public class Controller {
 					break;
 				}
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			EndView.showError("숫자를 입력해주세요");
 		} finally {
-			
+			try {
+				br.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
