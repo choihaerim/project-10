@@ -22,6 +22,7 @@ public class CustomerDAO {
 
 		EntityManager em = PublicCommon.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
+		try {
 
 		tx.begin();
 
@@ -33,10 +34,16 @@ public class CustomerDAO {
 		em.persist(customer);
 		tx.commit();
 
-		em.close();
-		em = null;
-
 		return customer;
+		}catch(Exception e){
+			tx.rollback();
+			e.printStackTrace();
+			return null;
+		}finally {
+			em.close();
+			em = null;
+		}
+
 	}
 
 	/**
@@ -60,12 +67,16 @@ public class CustomerDAO {
 	// "select c from Customer c where c.name=:name", name="Customer.findByName"
 	public static List<Customer> findByName(String name) {
 		EntityManager em = PublicCommon.getEntityManager();
-
-		List<Customer> all = em.createNamedQuery("Customer.findByName").setParameter("name", name).getResultList();
-
-		em.close();
-		em = null;
-		return all;
+		try {
+			List<Customer> all = em.createNamedQuery("Customer.findByName").setParameter("name", name).getResultList();
+			return all;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			em.close();
+			em = null;
+		}
 	}
 
 	/**
@@ -74,14 +85,19 @@ public class CustomerDAO {
 	public static void updateName(Long id, String name) {
 		EntityManager em = PublicCommon.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
+		try {
+			tx.begin();
+			Customer customer = em.find(Customer.class, id);
+			customer.setName(name);
 
-		tx.begin();
-		Customer customer = em.find(Customer.class, id);
-		customer.setName(name);
-
-		tx.commit();
-		em.close();
-		em = null;
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+		} finally {
+			em.close();
+			em = null;
+		}
 	}
 
 	/**
@@ -90,16 +106,21 @@ public class CustomerDAO {
 	public static void deleteById(Long id) {
 		EntityManager em = PublicCommon.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
-
+		try {
 		tx.begin();
 		Customer customer = em.find(Customer.class, id);
 		em.remove(customer);
-
-		em.close();
-		em = null;
+		tx.commit();
+		}catch(Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+		}finally {
+			em.close();
+			em = null;
+		}
 	}
 
-	@Test
+//	@Test
 	void runTest() {
 		EntityManager em = PublicCommon.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -107,7 +128,7 @@ public class CustomerDAO {
 		Reservation res1 = new Reservation();
 		Customer cus1 = em.find(Customer.class, 1l);
 		Attraction att1 = em.find(Attraction.class, 1l);
-		
+
 		res1.setMemberCnt(3);
 		res1.setTime("10:22");
 		res1.setAttraction(att1);

@@ -19,82 +19,90 @@ import util.PublicCommon;
 import view.EndView;
 
 public class Controller {
-
 	/**
-	 * 예약정보 하나 불러오기
+	 * 예약 추가하기
+	 * 
+	 * @param reservation
 	 */
-	public void getOneReservation() throws SQLException {
-		EndView.getReservationList(ReservationDAO.getOneReservation(2l));
+	public static void insertReservation(Long attractionId, Long customerId, String time, int cnt) {
+		try {
+			ReservationDAO.addReservation(attractionId, customerId, time, cnt);
+		} catch (Exception e) {
+			EndView.showError("오류가 발생했습니다");
+		}
 	}
 
 	/**
-	 * 모든 예약정보 가져오기
+	 * 모든 예약 정보 조회하기
 	 */
-	public void getAllReservation() throws SQLException {
-		EndView.getReservationAllList(ReservationDAO.getAllReservations());
+	public static void getAllReservation() {
+		try {
+			EndView.showResListView(ReservationDAO.getAllReservation());
+		} catch (Exception e) {
+			EndView.showError("오류가 발생했습니다");
+		}
+	}
+
+	/**
+	 * 예약 정보 하나 조회하기
+	 * 
+	 * @param reservationId
+	 */
+	public static void getOneReservation(Long reservationId) {
+		try {
+			EndView.allView(ReservationDAO.getOneReservation(reservationId));
+		} catch (Exception e) {
+			EndView.showError("오류가 발생했습니다");
+		}
+	}
+
+	/**
+	 * 예약 수정하기
+	 * 
+	 * @param reservationId, attraction
+	 */
+	public static void updateReservation(Long reservationId, String time) {
+		try {
+			ReservationDAO.updateReservation(reservationId, time);
+		} catch (Exception e) {
+			EndView.showError("오류가 발생했습니다");
+		}
 	}
 
 	/**
 	 * 예약정보 취소하기
+	 * 
+	 * @throws SQLException
 	 */
-	public void deleteReservation() throws SQLException {
-		EntityManager em = PublicCommon.getEntityManager();
+	public static void deleteReservation(Long reservId) {
 
 		System.out.println("삭제 전 검색해보기");
-		Reservation r = em.find(Reservation.class, 1l);
-		System.out.println("예약번호 : " + r.getReservationId() + "\n예약인원 : " + r.getMemberCnt() + "\n예약시간 : " + r.getTime());
+		Reservation r = ReservationDAO.getOneReservation(reservId);
+		System.out
+				.println("예약번호 : " + r.getReservationId() + "\n예약인원 : " + r.getMemberCnt() + "\n예약시간 : " + r.getTime());
 
-		ReservationDAO.deleteReservation(r.getReservationId());
+		ReservationDAO.deleteReservation(reservId);
 
 		System.out.println("삭제 후 남은 예약리스트 검색해보기");
-		List<Reservation> rs = ReservationDAO.getAllReservations();
-		rs.stream().forEach(v -> System.out.println("예약번호 : " + v.getReservationId() + "\t예약시간 : " + v.getTime()
-				+ "\t예약인원 : " + v.getMemberCnt() + "명"));
+		List<Reservation> rs = ReservationDAO.getAllReservation();
+		rs.stream().forEach(v -> System.out.println(
+				"예약번호 : " + v.getReservationId() + "\t예약시간 : " + v.getTime() + "\t예약인원 : " + v.getMemberCnt() + "명"));
 	}
 
+	/**
+	 * 시작 메뉴
+	 * 
+	 * @throws SQLException
+	 * @throws NumberFormatException
+	 */
+	public static void startView() throws IOException{
+		System.out.println("기능 선택 : 1(해림-Attraction)/2(기환-Customer)/3(지원,은진-Reservation))");
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-	public void insertReservation(Reservation reservation) {
 		try {
-			ReservationDAO.addReservation(reservation);
-		} catch (Exception e) {
-			EndView.showError("���ο� ���� ���� ���� �߻�");
-		}
-	}
-
-	// ��� ���� ��ȸ
-	public void getAllReservation2() {
-		try {
-			EndView.showResListView(ReservationDAO.getAllReservations());
-		} catch (Exception e) {
-			EndView.showError("��� ���� ��ȸ ���� �߻�");
-		}
-	}
-
-	// �ϳ��� ���� ��ȸ
-	public void getOneReservation(Long reservationId) {
-		try {
-			EndView.allView(ReservationDAO.getOneReservation(reservationId));
-		} catch (Exception e) {
-			EndView.showError("���� �˻� ���� �߻�");
-		}
-	}
-
-	public void updateReservation(Long reservationId, Attraction attraction) {
-		try {
-			ReservationDAO.updateReservation(reservationId, attraction);
-
-		} catch (Exception e) {
-			EndView.showError("��������;��");
-
-		}
-	}
-	
-	public static void startView() {
-		try {
-			System.out.println("기능 선택 : 1(해림-Attraction)/2(기환-Customer)/3(지원-Reservation)/4(은진-Reservation))");
-			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 			int a = Integer.parseInt(br.readLine());
 			String str = "";
+
 			switch (a) {
 			case 1://해림영역
 				System.out.println("============Attraction CRUD============");
@@ -126,9 +134,7 @@ public class Controller {
 					break;
 				}
 				break;
-			case 2://기환영역
-				System.out.println("============Customer CRUD============");
-				System.out.println("C:1/R:2/U:3/D:4");
+			case 2:// 기환영역
 				a = Integer.parseInt(br.readLine());
 				switch (a) {
 				case 1:
@@ -139,9 +145,9 @@ public class Controller {
 					break;
 				case 2:
 					selectAllCustomer();
-					System.out.println("이름을 입력하면 해당 이름을 가진 회원 모두 찾음.");
-					str = br.readLine();
-					findByName(str);
+//					System.out.println("이름");
+//					str = br.readLine();
+//					findByName(str);
 					break;
 				case 3:
 					System.out.println("id/이름");
@@ -156,32 +162,43 @@ public class Controller {
 					break;
 				}
 				break;
-			case 3://지원영역
-				break;
-			case 4://은진영역
-				break;
+			case 3:// 은진지원영역
+				a = Integer.parseInt(br.readLine());
+				switch (a) {
+				case 1: // 예약 추가하기??
+					System.out.println("놀이기구 id/ 고객 id/ 시간/ 인원 수");
+					str = br.readLine();
+					String[] str1 = str.split("/");
+					insertReservation(Long.parseLong(str1[0]), Long.parseLong(str1[1]), str1[2],
+							Integer.parseInt(str1[3]));
+					break;
+				case 2: // 모든 예약 조회하기 -> 관리자 입장
+					getAllReservation();
+					break;
+				case 3: // 예약 정보 하나 조회하기 -> 사용자 입장
+					System.out.println("id/이름");
+					str = br.readLine();
+					String[] str2 = str.split("/");
+					getOneReservation(Long.parseLong(str2[0]));
+					break;
+				case 4: // 예약 수정하기
+					System.out.println("id");
+					str = br.readLine();
+					String[] str3 = str.split("/");
+					updateReservation(Long.parseLong(str3[0]), str3[1]);
+					break;
+				case 5: // 예약 취소하기
+					System.out.println("id");
+					Long id = Long.parseLong(br.readLine());
+					deleteReservation(id);
+					break;
+				}
 			}
-
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			br.close();
 		}
-	}
-	public static void selectAllAttraction() {
-		List<Attraction> all = AttractionDAO.selectAllAttraction();
-
-		for (Attraction attraction : all) {
-			System.out.println("놀이기구 번호 : [" + attraction.getAttractionId() + "] 놀이기구 이름 : [" + attraction.getName() + "] 놀이기구 위치 : ["
-					+ attraction.getLocation() + "] 키 제한 : [" + attraction.getHeightLimit() + "] 보호자 동반 여부 : "
-					+ attraction.getParentYN());
-		}
-	}
-
-	
-	private static void insertAttraction(String name, String location, int heightLimit, String parentYN) {
-		Attraction attraction = AttractionDAO.insertAttraction(name, location, heightLimit, parentYN);
-		System.out.println(attraction + "삽입 완료");
-		
-		
 	}
 
 	public static void insertCustomer(String name, int height, String yn) {
@@ -198,7 +215,21 @@ public class Controller {
 					+ customer.getReservations());
 		}
 	}
+	private static void insertAttraction(String name, String location, int heightLimit, String parentYN) {
+		Attraction attraction = AttractionDAO.insertAttraction(name, location, heightLimit, parentYN);
+		System.out.println(attraction + "삽입 완료");
+	}
+	
+	public static void selectAllAttraction() {
+		List<Attraction> all = AttractionDAO.selectAllAttraction();
 
+		for (Attraction attraction : all) {
+			System.out.println("놀이기구 번호 : [" + attraction.getAttractionId() + "] 놀이기구 이름 : [" + attraction.getName() + "] 놀이기구 위치 : ["
+					+ attraction.getLocation() + "] 키 제한 : [" + attraction.getHeightLimit() + "] 보호자 동반 여부 : "
+					+ attraction.getParentYN());
+		}
+	}
+	
 	public static void findByName(String name) {
 		List<Customer> all = CustomerDAO.findByName(name);
 		all.stream().forEach(v -> System.out.println(v));
