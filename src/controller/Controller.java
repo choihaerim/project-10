@@ -5,11 +5,16 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Scanner;
+
+import javax.persistence.EntityManager;
 
 import model.dao.CustomerDAO;
 import model.dao.ReservationDAO;
+import model.dto.Attraction;
 import model.dto.Customer;
 import model.dto.Reservation;
+import util.PublicCommon;
 import view.EndView;
 
 public class Controller {
@@ -89,7 +94,7 @@ public class Controller {
 	 * @throws SQLException
 	 * @throws NumberFormatException
 	 */
-	public static void startView() {
+	public static void startView() throws IOException{
 		System.out.println("기능 선택 : 1(해림-Attraction)/2(기환-Customer)/3(지원-Reservation)/4(은진-Reservation))");
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
@@ -163,7 +168,7 @@ public class Controller {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			
+			br.close();
 		}
 	}
 

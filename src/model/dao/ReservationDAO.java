@@ -1,5 +1,6 @@
 package model.dao;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -9,7 +10,6 @@ import model.dto.Attraction;
 import model.dto.Customer;
 import model.dto.Reservation;
 import util.PublicCommon;
-import view.EndView;
 
 public class ReservationDAO {
 	/**
@@ -27,7 +27,6 @@ public class ReservationDAO {
 			reservation.setAttraction(em.find(Attraction.class, aId));
 			reservation.setMemberCnt(cnt);
 			reservation.setTime(time);
-
 			em.persist(reservation);
 
 			tx.commit();
@@ -47,7 +46,6 @@ public class ReservationDAO {
 	 * @param reservationId
 	 * @return reservation
 	 */
-	
 	public static Reservation getOneReservation(Long reservationId) {
 		EntityManager em = PublicCommon.getEntityManager();
 		Reservation reservation = null;
@@ -61,7 +59,6 @@ public class ReservationDAO {
 		}
 		return reservation;
 	}
-
 
 	/**
 	 * 모든 예약정보 가져오기
@@ -81,7 +78,6 @@ public class ReservationDAO {
 		return allreservations;
 	}
 
-	
 	/**
 	 *Reservation id로 예약 삭제하기
 	 *@param reservationId 

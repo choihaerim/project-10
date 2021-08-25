@@ -5,22 +5,40 @@ import java.util.List;
 import model.dto.Reservation;
 
 public class EndView {
-	public static void showResListView(List<Reservation> reservationList) {
-		reservationList.forEach(v -> System.out.println("=============\n" + "- ¿¹¾à ID : " + v.getReservationId()
-				+ "\n- ³îÀÌ±â±¸ ÀÌ¸§ : " + v.getAttraction().getName() + "\n- ÀÎ¿ø¼ö : " + v.getMemberCnt()
-				+ "\n- Ãë¼Ò °¡´É ¿©ºÎ : " + v.getCancelYN() + "\n- ¿¹¾àÀÚ ÀÌ¸§: " + v.getCustomer().getName()
-				+ "\n- ¿¹¾à ½Ã°£: " + v.getTime()));
+
+	/**
+	 * ì˜ˆì•½ì •ë³´ í•˜ë‚˜ ë¶ˆëŸ¬ì˜¤ê¸°
+	 */
+	public static void getReservationList(Reservation oneReservation) {
+		System.out.println("||" + "ì˜ˆì•½ë²ˆí˜¸ : " + oneReservation.getReservationId() + "||" + "ì˜ˆì•½ì¸ì› : "
+				+ oneReservation.getMemberCnt() + "ëª…" + "||" + "ì˜ˆì•½ì‹œê°„ : " + oneReservation.getTime() + "||"
+				+ "ì˜ˆì•½ ì·¨ì†Œ ê°€ëŠ¥ ì—¬ë¶€ : " + "||");
 	}
-	
-	
+
+	/**
+	 * ëª¨ë“  ì˜ˆì•½ì •ë³´ ê°€ì ¸ì˜¤ê¸°
+	 */
+	public static void getReservationAllList(List<Reservation> allReservation) {
+		allReservation.stream().forEach(v -> System.out.println("||" + "ì˜ˆì•½ë²ˆí˜¸ : " + v.getReservationId() + "||"
+				+ "ì˜ˆì•½ì‹œê°„ : " + v.getTime() + "||" + "ì˜ˆì•½ì¸ì› : " + v.getMemberCnt() + "ëª…" + "||"  + "||" + "ì˜ˆì•½ ê³ ê° ì´ë¦„ : " + v.getCustomer().getName() + "||" + "ì˜ˆì•½ ê³ ê° ì‹ ì¥ : "
+				+ v.getCustomer().getHeight() + "||" + "ì˜ˆì•½ ê³ ê° ì•Œë¦¼ í—ˆìš© ì—¬ë¶€ : " + v.getCustomer().getAlarmYN() + "||"));
+	}
+
+	public static void showResListView(List<Reservation> reservationList) {
+		reservationList.forEach(v -> System.out.println("=============\n" + "- ï¿½ï¿½ï¿½ï¿½ ID : " + v.getReservationId()
+				+ "\n- ï¿½ï¿½ï¿½Ì±â±¸ ï¿½Ì¸ï¿½ : " + v.getAttraction().getName() + "\n- ï¿½Î¿ï¿½ï¿½ï¿½ : " + v.getMemberCnt()
+				 + "\n- ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½: " + v.getCustomer().getName()
+				+ "\n- ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½: " + v.getTime()));
+	}
+
 	public static void allView(Object data) {
 		if (data != null) {
 			System.out.println(data);
 		} else {
-			System.out.println("Á¤º¸°¡ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù");
+			System.out.println("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê½ï¿½ï¿½Ï´ï¿½");
 		}
 	}
-	
+
 	public static void showError(String msg) {
 		System.out.println(msg);
 	}
