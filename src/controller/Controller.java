@@ -5,15 +5,52 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 
-import javax.transaction.Transactional;
-
-import org.junit.jupiter.api.Test;
-
 import model.dao.CustomerDAO;
+import model.dao.ReservationDAO;
+import model.dto.Attraction;
 import model.dto.Customer;
 import model.dto.Reservation;
+import view.EndView;
 
 public class Controller {
+
+	// ���ο� ���� ����
+	public void insertReservation(Reservation reservation) {
+		try {
+			ReservationDAO.addReservation(reservation);
+		} catch (Exception e) {
+			EndView.showError("���ο� ���� ���� ���� �߻�");
+		}
+	}
+
+	// ��� ���� ��ȸ
+	public void getAllReservation() {
+		try {
+			EndView.showResListView(ReservationDAO.getAllReservations());
+		} catch (Exception e) {
+			EndView.showError("��� ���� ��ȸ ���� �߻�");
+		}
+	}
+
+	// �ϳ��� ���� ��ȸ
+	public void getOneReservation(int reservationId) {
+		try {
+			EndView.allView(ReservationDAO.getReservation(reservationId));
+		} catch (Exception e) {
+			EndView.showError("���� �˻� ���� �߻�");
+		}
+	}
+
+	public void updateReservation(int reservationId, Attraction attraction) {
+		try {
+			ReservationDAO.updateReservation(reservationId, attraction);
+
+		} catch (Exception e) {
+			EndView.showError("��������;��");
+
+		}
+	}
+	
 	public static void startView() {
 		try {
 			System.out.println("CRUD(1,2,3,4)");
