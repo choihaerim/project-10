@@ -1,36 +1,43 @@
 package controller;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.List;
+
+import model.dao.CustomerDAO;
 import model.dao.ReservationDAO;
 import model.dto.Attraction;
+import model.dto.Customer;
 import model.dto.Reservation;
 import view.EndView;
 
 public class Controller {
 
-	// »õ·Î¿î ¿¹¾à ÀúÀå
+	// ï¿½ï¿½ï¿½Î¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	public void insertReservation(Reservation reservation) {
 		try {
 			ReservationDAO.addReservation(reservation);
 		} catch (Exception e) {
-			EndView.showError("»õ·Î¿î ¿¹¾à ÀúÀå ¿À·ù ¹ß»ı");
+			EndView.showError("ï¿½ï¿½ï¿½Î¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½");
 		}
 	}
 
-	// ¸ğµç ¿¹¾à Á¶È¸
+	// ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¸
 	public void getAllReservation() {
 		try {
 			EndView.showResListView(ReservationDAO.getAllReservations());
 		} catch (Exception e) {
-			EndView.showError("¸ğµç ¿¹¾à Á¶È¸ ¿À·ù ¹ß»ı");
+			EndView.showError("ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¸ ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½");
 		}
 	}
 
-	// ÇÏ³ªÀÇ ¿¹¾à Á¶È¸
+	// ï¿½Ï³ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¸
 	public void getOneReservation(int reservationId) {
 		try {
 			EndView.allView(ReservationDAO.getReservation(reservationId));
 		} catch (Exception e) {
-			EndView.showError("Á¤º¸ °Ë»ö ¿À·ù ¹ß»ı");
+			EndView.showError("ï¿½ï¿½ï¿½ï¿½ ï¿½Ë»ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½");
 		}
 	}
 
@@ -39,8 +46,73 @@ public class Controller {
 			ReservationDAO.updateReservation(reservationId, attraction);
 
 		} catch (Exception e) {
-			EndView.showError("±ú¹ö¸®°í½Í¾î¾î");
+			EndView.showError("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¾ï¿½ï¿½");
 
 		}
 	}
+	
+	public static void startView() {
+		try {
+			System.out.println("CRUD(1,2,3,4)");
+			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+			int a = Integer.parseInt(br.readLine());
+			String str = "";
+			switch (a) {
+			case 1:
+				System.out.println("ì´ë¦„/í‚¤/ì•ŒëŒì—¬ë¶€(y or n)");
+				str = br.readLine();
+				String[] str2 = str.split("/");
+				insertCustomer(str2[0], Integer.parseInt(str2[1]), str2[2]);
+				break;
+			case 2:
+				selectAllCustomer();
+//				System.out.println("ì´ë¦„");
+//				str = br.readLine();
+//				findByName(str);
+				break;
+			case 3:
+				System.out.println("id/ì´ë¦„");
+				str = br.readLine();
+				String[] str3 = str.split("/");
+				updateName(Long.parseLong(str3[0]), str3[1]);
+				break;
+			case 4:
+				System.out.println("id");
+				Long id = Long.parseLong(br.readLine());
+				deleteById(id);
+				break;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void insertCustomer(String name, int height, String yn) {
+		Customer customer = CustomerDAO.insertCustomer(name, height, yn);
+		System.out.println(customer + "ì‚½ì… ì™„ë£Œ");
+	}
+
+	public static void selectAllCustomer() {
+		List<Customer> all = CustomerDAO.selectAllCustomer();
+
+		for (Customer customer : all) {
+			System.out.println("íšŒì›ë²ˆí˜¸ : " + customer.getCustomerId() + " íšŒì›ì´ë¦„ : " + customer.getName() + " í‚¤ : "
+					+ customer.getHeight() + "cm ì•Œë¦¼ë™ì˜ì—¬ë¶€ : " + customer.getAlarmYN() + "ì—ì•½ ë‚´ì—­ : "
+					+ customer.getReservations());
+		}
+	}
+
+	public static void findByName(String name) {
+		List<Customer> all = CustomerDAO.findByName(name);
+		all.stream().forEach(v -> System.out.println(v));
+	}
+
+	public static void updateName(Long id, String name) {
+		CustomerDAO.updateName(id, name);
+	}
+
+	public static void deleteById(Long id) {
+		CustomerDAO.deleteById(id);
+	}
+
 }
