@@ -19,7 +19,6 @@ public class ReservationDAO {
 			Reservation reservation = new Reservation();
 
 			reservation.setMemberCnt(res.getMemberCnt());
-			reservation.setCancelYN(res.getCancelYN());
 			reservation.setTime(res.getTime());
 
 			reservation.setCustomer(res.getCustomer());
@@ -60,7 +59,7 @@ public class ReservationDAO {
 		List<Reservation> all = em.createQuery(jpql).getResultList();
 		all.forEach(v -> System.out.println("=============\n" + "- 예약 ID : " + v.getReservationId()
 				+ "\n- 놀이기구 이름 : " + v.getAttraction().getName() + "\n- 인원수 : " + v.getMemberCnt()
-				+ "\n- 취소 가능 여부 : " + v.getCancelYN() + "\n- 예약자 이름: " + v.getCustomer().getName()
+				 + "\n- 예약자 이름: " + v.getCustomer().getName()
 				+ "\n- 예약 시간: " + v.getTime()));
 
 		em.close();

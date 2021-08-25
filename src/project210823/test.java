@@ -22,13 +22,12 @@ public class test {
 		EntityManager em = PublicCommon.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
-		Attraction att1 = em.find(Attraction.class, 3l);
-		Customer cus1 = em.find(Customer.class, 1l);
+		Attraction att1 = em.find(Attraction.class, 1l);
+		Customer cus1 = em.find(Customer.class, 2l);
 		Reservation res1 = new Reservation();
 		
 		res1.setMemberCnt(3);
-		res1.setCancelYN("y");
-		res1.setTime("15:30");
+		res1.setTime("12:30");
 		
 		res1.setCustomer(cus1);
 		res1.setAttraction(att1);

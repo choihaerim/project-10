@@ -42,14 +42,14 @@ public class Controller {
 		System.out.println("삭제 전 검색해보기");
 		Reservation r = em.find(Reservation.class, 1l);
 		System.out.println("예약번호 : " + r.getReservationId() + "\n예약인원 : " + r.getMemberCnt() + "\n예약시간 : " + r.getTime()
-				+ "\n예약 취소 가능 여부 : " + r.getCancelYN());
+				+ "\n예약 취소 가능 여부 : ");
 
 		ReservationDAO.deleteReservation(r.getReservationId());
 
 		System.out.println("삭제 후 남은 예약리스트 검색해보기");
 		List<Reservation> rs = ReservationDAO.getAllReservations();
 		rs.stream().forEach(v -> System.out.println("예약번호 : " + v.getReservationId() + "\t예약시간 : " + v.getTime()
-				+ "\t예약인원 : " + v.getMemberCnt() + "명" + "\t예약 취소 가능 여부 : " + v.getCancelYN()));
+				+ "\t예약인원 : " + v.getMemberCnt() + "명"));
 	}
 
 	/**
@@ -250,9 +250,9 @@ public class Controller {
 					break;
 				case 2:
 					selectAllCustomer();
-//					System.out.println("이름");
-//					str = br.readLine();
-//					findByName(str);
+					System.out.println("이름을 입력하면 해당 이름을 가진 회원 모두 찾음.");
+					str = br.readLine();
+					findByName(str);
 					break;
 				case 3:
 					System.out.println("id/이름");
@@ -287,8 +287,8 @@ public class Controller {
 		List<Customer> all = CustomerDAO.selectAllCustomer();
 
 		for (Customer customer : all) {
-			System.out.println("회원번호 : " + customer.getCustomerId() + " 회원이름 : " + customer.getName() + " 키 : "
-					+ customer.getHeight() + "cm 알림동의여부 : " + customer.getAlarmYN() + "에약 내역 : "
+			System.out.println("회원번호 : [" + customer.getCustomerId() + "] 회원이름 : [" + customer.getName() + "] 키 : ["
+					+ customer.getHeight() + "cm] 알림동의여부 : [" + customer.getAlarmYN() + "] 예약 내역 : "
 					+ customer.getReservations());
 		}
 	}

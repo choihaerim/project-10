@@ -129,7 +129,6 @@ public class CustomerDAO {
 		Customer cus1 = em.find(Customer.class, 1l);
 		Attraction att1 = em.find(Attraction.class, 1l);
 
-		res1.setCancelYN("y");
 		res1.setMemberCnt(3);
 		res1.setTime("10:22");
 		res1.setAttraction(att1);
