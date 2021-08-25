@@ -1,6 +1,5 @@
 package model.dao;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -9,8 +8,6 @@ import javax.persistence.EntityTransaction;
 import org.junit.jupiter.api.Test;
 
 import model.dto.Attraction;
-import model.dto.Customer;
-import model.dto.Reservation;
 import util.PublicCommon;
 
 public class AttractionDAO {

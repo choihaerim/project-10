@@ -77,17 +77,14 @@ public class Controller {
 	public static void deleteReservation(Long reservId) {
 
 		System.out.println("삭제 전 검색해보기");
-		Reservation r = ReservationDAO.getOneReservation(reservId);
-		System.out
-				.println("예약번호 : " + r.getReservationId() + "\n예약인원 : " + r.getMemberCnt() + "\n예약시간 : " + r.getTime());
-
+		EndView.allView(ReservationDAO.getOneReservation(reservId));
+		
 		ReservationDAO.deleteReservation(reservId);
 
 		System.out.println("삭제 후 남은 예약리스트 검색해보기");
-		List<Reservation> rs = ReservationDAO.getAllReservation();
-		rs.stream().forEach(v -> System.out.println(
-				"예약번호 : " + v.getReservationId() + "\t예약시간 : " + v.getTime() + "\t예약인원 : " + v.getMemberCnt() + "명"));
+		EndView.allView(ReservationDAO.getOneReservation(reservId));
 	}
+
 
 	/**
 	 * 시작 메뉴
@@ -135,6 +132,7 @@ public class Controller {
 				}
 				break;
 			case 2:// 기환영역
+				System.out.println("C:1/R:2/U:3/D:4");
 				a = Integer.parseInt(br.readLine());
 				switch (a) {
 				case 1:
@@ -145,9 +143,9 @@ public class Controller {
 					break;
 				case 2:
 					selectAllCustomer();
-//					System.out.println("이름");
-//					str = br.readLine();
-//					findByName(str);
+					System.out.println("이름을 입력하면 해당 이름을 가진 회원 정보 모두 조회");
+					str = br.readLine();
+					findByName(str);
 					break;
 				case 3:
 					System.out.println("id/이름");
@@ -163,6 +161,7 @@ public class Controller {
 				}
 				break;
 			case 3:// 은진지원영역
+				System.out.println("예약 추가(1)/모든예약조회(2)/특정예약정보조회(3)/예약수정(4)/예약취소(5)");
 				a = Integer.parseInt(br.readLine());
 				switch (a) {
 				case 1: // 예약 추가하기??
@@ -176,13 +175,13 @@ public class Controller {
 					getAllReservation();
 					break;
 				case 3: // 예약 정보 하나 조회하기 -> 사용자 입장
-					System.out.println("id/이름");
+					System.out.println("예약번호입력");
 					str = br.readLine();
 					String[] str2 = str.split("/");
 					getOneReservation(Long.parseLong(str2[0]));
 					break;
 				case 4: // 예약 수정하기
-					System.out.println("id");
+					System.out.println("id/시간");
 					str = br.readLine();
 					String[] str3 = str.split("/");
 					updateReservation(Long.parseLong(str3[0]), str3[1]);

@@ -34,18 +34,18 @@ public class Reservation {
 	@Column(name="member_cnt")
 	private int memberCnt;
 	
-	@ManyToOne(cascade=CascadeType.ALL)//객체의 primary key 값을 자동 참조. name 태그는 컬럼명을 정의해 줄 뿐임.
+	@ManyToOne(fetch=FetchType.EAGER)//객체의 primary key 값을 자동 참조. name 태그는 컬럼명을 정의해 줄 뿐임.
 	@JoinColumn(name="attraction_id")
 	private Attraction attraction;
 
-	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="customer_id")
 	private Customer customer;
 
 	@Override
 	public String toString() {
-		return "Reservation [reservationId=" + reservationId + ", time=" + time + ", memberCnt=" + memberCnt
-			+ ", attraction=" + attraction.getAttractionId() + ", customer=" + customer.getCustomerId() + "]";
+		return "[예약번호=" + reservationId + ", 시간=" + time + ", 일행 수=" + memberCnt
+				+ ", 놀이기구번호=" + attraction.getAttractionId() + ", 회원번호=" + customer.getCustomerId()+"]";
 	}
 
 
