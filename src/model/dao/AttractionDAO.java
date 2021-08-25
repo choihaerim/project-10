@@ -21,22 +21,26 @@ public class AttractionDAO {
 		try {
 
 			Attraction att1 = new Attraction();
-			att1.setLocation("범퍼카");
+			att1.setLocation("A2");
+			att1.setName("범퍼카");
 			att1.setHeightLimit(120);
 			att1.setParentYN("y");
 
 			Attraction att2 = new Attraction();
-			att2.setLocation("매직스윙");
+			att2.setLocation("A3");
+			att2.setName("매직스윙");
 			att2.setHeightLimit(140);
 			att2.setParentYN("y");
 
 			Attraction att3 = new Attraction();
-			att3.setLocation("비룡열차");
+			att3.setLocation("B1");
+			att3.setName("비룡열차");
 			att3.setHeightLimit(160);
 			att3.setParentYN("n");
 
 			Attraction att4 = new Attraction();
-			att4.setLocation("우주전투기");
+			att4.setLocation("B2");
+			att4.setName("우주전투기");
 			att4.setHeightLimit(110);
 			att4.setParentYN("n");
 
@@ -115,13 +119,11 @@ public class AttractionDAO {
 	/**
 	 * 놀이기구 정보 수정하기
 	 */
-	public static void attractionUpdate(Long attractionId, int heightLimit) {
+	public static void attractionUpdate() {
 		EntityManager em = PublicCommon.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 		try {
-			Attraction attraction = em.find(Attraction.class, attractionId);
-			attraction.setHeightLimit(heightLimit);
 
 			tx.commit();
 		} catch (Exception e) {

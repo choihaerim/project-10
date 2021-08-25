@@ -30,7 +30,7 @@ public class Controller {
 	 * 모든 예약정보 가져오기
 	 */
 	public void getAllReservation() throws SQLException {
-		EndView.getReservationAllList(ReservationDAO.getAllReservation());
+		EndView.getReservationAllList(ReservationDAO.getAllReservations());
 	}
 
 	/**
@@ -40,14 +40,14 @@ public class Controller {
 		EntityManager em = PublicCommon.getEntityManager();
 
 		System.out.println("삭제 전 검색해보기");
-		Reservation r = em.find(Reservation.class, 3l);
+		Reservation r = em.find(Reservation.class, 1l);
 		System.out.println("예약번호 : " + r.getReservationId() + "\n예약인원 : " + r.getMemberCnt() + "\n예약시간 : " + r.getTime()
 				+ "\n예약 취소 가능 여부 : " + r.getCancelYN());
 
-		ReservationDAO.deleteReservation();
+		ReservationDAO.deleteReservation(r.getReservationId());
 
 		System.out.println("삭제 후 남은 예약리스트 검색해보기");
-		List<Reservation> rs = ReservationDAO.getAllReservation();
+		List<Reservation> rs = ReservationDAO.getAllReservations();
 		rs.stream().forEach(v -> System.out.println("예약번호 : " + v.getReservationId() + "\t예약시간 : " + v.getTime()
 				+ "\t예약인원 : " + v.getMemberCnt() + "명" + "\t예약 취소 가능 여부 : " + v.getCancelYN()));
 	}
@@ -218,7 +218,7 @@ public class Controller {
 		}
 	}
 
-	public void updateReservation(int reservationId, Attraction attraction) {
+	public void updateReservation(Long reservationId, Attraction attraction) {
 		try {
 			ReservationDAO.updateReservation(reservationId, attraction);
 
@@ -230,35 +230,49 @@ public class Controller {
 	
 	public static void startView() {
 		try {
-			System.out.println("CRUD(1,2,3,4)");
+			System.out.println("기능 선택 : 1(해림-Attraction)/2(기환-Customer)/3(지원-Reservation)/4(은진-Reservation))");
 			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 			int a = Integer.parseInt(br.readLine());
 			String str = "";
 			switch (a) {
-			case 1:
-				System.out.println("이름/키/알람여부(y or n)");
-				str = br.readLine();
-				String[] str2 = str.split("/");
-				insertCustomer(str2[0], Integer.parseInt(str2[1]), str2[2]);
+			case 1://해림영역
 				break;
-			case 2:
-				selectAllCustomer();
-//				System.out.println("이름");
-//				str = br.readLine();
-//				findByName(str);
+			case 2://기환영역
+				System.out.println("============Customer CRUD============");
+				System.out.println("C:1/R:2/U:3/D:4");
+				a = Integer.parseInt(br.readLine());
+				switch (a) {
+				case 1:
+					System.out.println("이름/키/알람여부(y or n)");
+					str = br.readLine();
+					String[] str2 = str.split("/");
+					insertCustomer(str2[0], Integer.parseInt(str2[1]), str2[2]);
+					break;
+				case 2:
+					selectAllCustomer();
+//					System.out.println("이름");
+//					str = br.readLine();
+//					findByName(str);
+					break;
+				case 3:
+					System.out.println("id/이름");
+					str = br.readLine();
+					String[] str3 = str.split("/");
+					updateName(Long.parseLong(str3[0]), str3[1]);
+					break;
+				case 4:
+					System.out.println("id");
+					Long id = Long.parseLong(br.readLine());
+					deleteById(id);
+					break;
+				}
 				break;
-			case 3:
-				System.out.println("id/이름");
-				str = br.readLine();
-				String[] str3 = str.split("/");
-				updateName(Long.parseLong(str3[0]), str3[1]);
+			case 3://지원영역
 				break;
-			case 4:
-				System.out.println("id");
-				Long id = Long.parseLong(br.readLine());
-				deleteById(id);
+			case 4://은진영역
 				break;
 			}
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
