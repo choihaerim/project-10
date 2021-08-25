@@ -95,7 +95,7 @@ public class Controller {
 	 * @throws NumberFormatException
 	 */
 	public static void startView() throws IOException{
-		System.out.println("기능 선택 : 1(해림-Attraction)/2(기환-Customer)/3(지원-Reservation)/4(은진-Reservation))");
+		System.out.println("기능 선택 : 1(해림-Attraction)/2(기환-Customer)/3(지원,은진-Reservation))");
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
 		try {
