@@ -1,16 +1,11 @@
 package model.dao;
 
-import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Scanner;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
-import org.junit.jupiter.api.Test;
-
-import model.dto.Customer;
 import model.dto.Reservation;
 import util.PublicCommon;
 
