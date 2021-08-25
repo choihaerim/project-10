@@ -27,5 +27,4 @@ public class PublicCommon {
 		emf.close();
 		emf = null;
 	}
-	
 }
