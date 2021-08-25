@@ -27,10 +27,13 @@ import lombok.ToString;
 @Entity
 @SequenceGenerator(name="att_seq", sequenceName="att_seq_id", initialValue=1, allocationSize=1)
 public class Attraction {
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="att_seq")
 	@Column(name="attraction_id")
 	private Long attractionId;
+	
+	private String name;
 	
 	private String location;
 	

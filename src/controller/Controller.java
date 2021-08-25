@@ -1,5 +1,7 @@
 package controller;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.util.List;
@@ -7,60 +9,52 @@ import java.util.Scanner;
 
 import javax.persistence.EntityManager;
 
+import model.dao.CustomerDAO;
 import model.dao.ReservationDAO;
+import model.dto.Attraction;
+import model.dto.Customer;
 import model.dto.Reservation;
 import util.PublicCommon;
 import view.EndView;
 
 public class Controller {
-	
+
 	/**
 	 * 예약정보 하나 불러오기
 	 */
 	public void getOneReservation() throws SQLException {
 		EndView.getReservationList(ReservationDAO.getOneReservation(2l));
 	}
-	
-	
+
 	/**
 	 * 모든 예약정보 가져오기
 	 */
 	public void getAllReservation() throws SQLException {
 		EndView.getReservationAllList(ReservationDAO.getAllReservation());
 	}
-	
-	
+
 	/**
 	 * 예약정보 취소하기
 	 */
-	public void deleteReservation(Long reservationId) throws SQLException {
+	public void deleteReservation() throws SQLException {
 		EntityManager em = PublicCommon.getEntityManager();
-		
+
 		System.out.println("삭제 전 검색해보기");
 		Reservation r = em.find(Reservation.class, 3l);
-		System.out.println("예약번호 : " + r.getReservationId() + 
-				   		   "\n예약인원 : " + r.getMemberCnt() + 
-				   		   "\n예약시간 : " + r.getTime() +
-				   		   "\n예약 취소 가능 여부 : " + r.getCancelYN()
-				   		   );
-		
-		ReservationDAO.deleteReservation(reservationId);
-		
+		System.out.println("예약번호 : " + r.getReservationId() + "\n예약인원 : " + r.getMemberCnt() + "\n예약시간 : " + r.getTime()
+				+ "\n예약 취소 가능 여부 : " + r.getCancelYN());
+
+		ReservationDAO.deleteReservation();
+
 		System.out.println("삭제 후 남은 예약리스트 검색해보기");
 		List<Reservation> rs = ReservationDAO.getAllReservation();
-		rs.stream().forEach(v -> System.out.println("예약번호 : " + v.getReservationId() +
-													"\t예약시간 : " + v.getTime() + 
-													"\t예약인원 : " + v.getMemberCnt() + "명" + 
-													"\t예약 취소 가능 여부 : " + v.getCancelYN())
-							);
+		rs.stream().forEach(v -> System.out.println("예약번호 : " + v.getReservationId() + "\t예약시간 : " + v.getTime()
+				+ "\t예약인원 : " + v.getMemberCnt() + "명" + "\t예약 취소 가능 여부 : " + v.getCancelYN()));
 	}
-	
-	
-	
-	
-//	/**
-//	 * 시작 메뉴
-//	 */
+
+	/**
+	 * 시작 메뉴
+	 */
 //	public static void startMenu() {
 //		System.out.println("***** 꿈과 환상의 나라 EVERLAND에 오신걸 환영합니다! *****");
 //		int choice = -1;
@@ -118,12 +112,12 @@ public class Controller {
 //						e.printStackTrace();
 ////						RunningEndView.showError("차량 번호를 다시 확인해주세요.");
 //					}
-//					
+//
 //				} catch (NumberFormatException e) {
 //					e.printStackTrace();
 ////					RunningEndView.showError("고객 번호를 다시 확인해주세요.");
 //				}
-//				
+//
 //			} else if (choice == 7) {
 //				System.out.println("예약번호를 기억하시나요? y/n");
 //				String answer = sc.next();
@@ -131,7 +125,7 @@ public class Controller {
 //					System.out.println("예약내역을 조회하실 고객 이름을 입력해주세요.");
 //					answer = sc.next();
 ////					getRentList(answer);
-//				}else {
+//				} else {
 //					System.out.println("예약번호를 입력해주세요.");
 //					int rentId = 0;
 //					try {
@@ -175,7 +169,7 @@ public class Controller {
 //				} catch (NumberFormatException e) {
 //					e.printStackTrace();
 //					System.out.println("숫자를 입력하지 않아 기본값 0으로 저장됩니다.");
-//				} 
+//				}
 ////				addCar(new CarDTO(model, brand, carType, price));
 //
 //			} else if (choice == 11) {
@@ -188,7 +182,7 @@ public class Controller {
 //					System.out.println("숫자를 입력하지 않아 조회할 수 없습니다.");
 //				}
 ////				deleteCar(carId);
-//				
+//
 //			} else if (choice == 12) {
 ////				getAllRentList();
 //			}
@@ -197,7 +191,105 @@ public class Controller {
 //		sc.close();
 //		sc = null;
 //	}
+//	// ���ο� ���� ����
+	public void insertReservation(Reservation reservation) {
+		try {
+			ReservationDAO.addReservation(reservation);
+		} catch (Exception e) {
+			EndView.showError("���ο� ���� ���� ���� �߻�");
+		}
+	}
+
+	// ��� ���� ��ȸ
+	public void getAllReservation2() {
+		try {
+			EndView.showResListView(ReservationDAO.getAllReservations());
+		} catch (Exception e) {
+			EndView.showError("��� ���� ��ȸ ���� �߻�");
+		}
+	}
+
+	// �ϳ��� ���� ��ȸ
+	public void getOneReservation(Long reservationId) {
+		try {
+			EndView.allView(ReservationDAO.getOneReservation(reservationId));
+		} catch (Exception e) {
+			EndView.showError("���� �˻� ���� �߻�");
+		}
+	}
+
+	public void updateReservation(int reservationId, Attraction attraction) {
+		try {
+			ReservationDAO.updateReservation(reservationId, attraction);
+
+		} catch (Exception e) {
+			EndView.showError("��������;��");
+
+		}
+	}
 	
-	
-	
+	public static void startView() {
+		try {
+			System.out.println("CRUD(1,2,3,4)");
+			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+			int a = Integer.parseInt(br.readLine());
+			String str = "";
+			switch (a) {
+			case 1:
+				System.out.println("이름/키/알람여부(y or n)");
+				str = br.readLine();
+				String[] str2 = str.split("/");
+				insertCustomer(str2[0], Integer.parseInt(str2[1]), str2[2]);
+				break;
+			case 2:
+				selectAllCustomer();
+//				System.out.println("이름");
+//				str = br.readLine();
+//				findByName(str);
+				break;
+			case 3:
+				System.out.println("id/이름");
+				str = br.readLine();
+				String[] str3 = str.split("/");
+				updateName(Long.parseLong(str3[0]), str3[1]);
+				break;
+			case 4:
+				System.out.println("id");
+				Long id = Long.parseLong(br.readLine());
+				deleteById(id);
+				break;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void insertCustomer(String name, int height, String yn) {
+		Customer customer = CustomerDAO.insertCustomer(name, height, yn);
+		System.out.println(customer + "삽입 완료");
+	}
+
+	public static void selectAllCustomer() {
+		List<Customer> all = CustomerDAO.selectAllCustomer();
+
+		for (Customer customer : all) {
+			System.out.println("회원번호 : " + customer.getCustomerId() + " 회원이름 : " + customer.getName() + " 키 : "
+					+ customer.getHeight() + "cm 알림동의여부 : " + customer.getAlarmYN() + "에약 내역 : "
+					+ customer.getReservations());
+		}
+	}
+
+	public static void findByName(String name) {
+		List<Customer> all = CustomerDAO.findByName(name);
+		all.stream().forEach(v -> System.out.println(v));
+	}
+
+	public static void updateName(Long id, String name) {
+		CustomerDAO.updateName(id, name);
+	}
+
+	public static void deleteById(Long id) {
+		CustomerDAO.deleteById(id);
+	}
+
 }

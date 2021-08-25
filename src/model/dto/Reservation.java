@@ -1,13 +1,16 @@
 package model.dto;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
+import javax.transaction.Transactional;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,7 +21,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @Setter
 @Getter
-
 @Entity
 @SequenceGenerator(name="res_seq", sequenceName="res_seq_id", initialValue=1, allocationSize=1)
 public class Reservation {
@@ -35,12 +37,20 @@ public class Reservation {
 	@Column(name="cancel_yn")
 	private String cancelYN;
 	
-	@ManyToOne//객체의 primary key 값을 자동 참조. name 태그는 컬럼명을 정의해 줄 뿐임.
+	@ManyToOne(cascade=CascadeType.ALL)//객체의 primary key 값을 자동 참조. name 태그는 컬럼명을 정의해 줄 뿐임.
 	@JoinColumn(name="attraction_id")
 	private Attraction attraction;
-	
-	@ManyToOne
+
+	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	@JoinColumn(name="customer_id")
 	private Customer customer;
-}
 
+	@Override
+	public String toString() {
+		return "Reservation [reservationId=" + reservationId + ", time=" + time + ", memberCnt=" + memberCnt
+				+ ", cancelYN=" + cancelYN + ", attraction=" + attraction.getAttractionId() + ", customer=" + customer.getCustomerId() + "]";
+	}
+
+
+	
+}
