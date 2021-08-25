@@ -17,33 +17,7 @@ import util.PublicCommon;
 public class test {
 	
 	@Test
-	void runTest() throws SQLException {
-		
-		EntityManager em = PublicCommon.getEntityManager();
-		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-		Attraction att1 = em.find(Attraction.class, 1l);
-		Customer cus1 = em.find(Customer.class, 2l);
-		Reservation res1 = new Reservation();
-		
-		res1.setMemberCnt(3);
-		res1.setTime("12:30");
-		
-		res1.setCustomer(cus1);
-		res1.setAttraction(att1);
-		att1.getReservations().add(res1);
-		cus1.getReservations().add(res1);
-		
-		ReservationDAO.addReservation(res1);
-		
-		ReservationDAO.getAllReservations();
-		
-//		Reservation res = ReservationDAO.getOneReservation(3l);
-		System.out.println(res1.getCustomer().getName());
-		
-//		ReservationDAO.deleteReservation(1l);
-		
-		ReservationDAO.getAllReservations();
+	void runTest()  {
 		
 		
 	}

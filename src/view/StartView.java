@@ -8,8 +8,8 @@ public class StartView {
 
 	public static void main(String[] args) {
 		try {
-		Controller.startView();
-		}catch(IOException e) {
+			Controller.startView();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}

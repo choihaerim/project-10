@@ -7,23 +7,26 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
 import model.dto.Attraction;
+import model.dto.Customer;
 import model.dto.Reservation;
 import util.PublicCommon;
 
 public class ReservationDAO {
-	public static void addReservation(Reservation res) {
+	/**
+	 * 새로운 예약 저장하기
+	 * @param attractionId, customerId, time, cnt
+	 */
+	public static void addReservation(Long aId, Long cId, String time, int cnt) {
 		EntityManager em = PublicCommon.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 		try {
 			Reservation reservation = new Reservation();
-
-			reservation.setMemberCnt(res.getMemberCnt());
-			reservation.setTime(res.getTime());
-
-			reservation.setCustomer(res.getCustomer());
-			reservation.setAttraction(res.getAttraction());
-
+			
+			reservation.setCustomer(em.find(Customer.class, cId));
+			reservation.setAttraction(em.find(Attraction.class, aId));
+			reservation.setMemberCnt(cnt);
+			reservation.setTime(time);
 			em.persist(reservation);
 
 			tx.commit();
@@ -36,10 +39,16 @@ public class ReservationDAO {
 		}
 	}
 
+	
+	/**
+	 * 예약정보 하나 불러오기
+	 * 
+	 * @param reservationId
+	 * @return reservation
+	 */
 	public static Reservation getOneReservation(Long reservationId) {
 		EntityManager em = PublicCommon.getEntityManager();
 		Reservation reservation = null;
-
 		try {
 			reservation = em.find(Reservation.class, reservationId);
 		} catch (Exception e) {
@@ -49,25 +58,30 @@ public class ReservationDAO {
 			em = null;
 		}
 		return reservation;
-
 	}
 
-	public static List<Reservation> getAllReservations() throws SQLException {
+	/**
+	 * 모든 예약정보 가져오기
+	 */
+	public static List<Reservation> getAllReservation() {
 		EntityManager em = PublicCommon.getEntityManager();
-
-		String jpql = "select r from Reservation r";
-		List<Reservation> all = em.createQuery(jpql).getResultList();
-		all.forEach(v -> System.out.println("=============\n" + "- 예약 ID : " + v.getReservationId()
-				+ "\n- 놀이기구 이름 : " + v.getAttraction().getName() + "\n- 인원수 : " + v.getMemberCnt()
-				 + "\n- 예약자 이름: " + v.getCustomer().getName()
-				+ "\n- 예약 시간: " + v.getTime()));
-
-		em.close();
-		em = null;
-
-		return all;
+		List<Reservation> allreservations = null;
+		try {
+			String jpql = "select r from Reservation r";
+			allreservations = em.createQuery(jpql).getResultList();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			em.close();
+			em = null;
+		}
+		return allreservations;
 	}
 
+	/**
+	 *Reservation id로 예약 삭제하기
+	 *@param reservationId 
+	 */
 	public static void deleteReservation(Long reservationId) {
 		EntityManager em = PublicCommon.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -86,9 +100,13 @@ public class ReservationDAO {
 			em = null;
 		}
 	}
+	
 
-	// reservation id로 예약한 놀이기구 수정
-	public static void updateReservation(Long reservationId, Attraction attraction) {
+	/**
+	 * reservation id로 예약시간 수정
+	 * @param reservationId, time
+	 * */
+	public static void updateReservation(Long reservationId, String time) {
 		EntityManager em = PublicCommon.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
@@ -97,7 +115,7 @@ public class ReservationDAO {
 		
 		try {
 			reservation = em.find(Reservation.class, reservationId);
-			reservation.setAttraction(attraction);
+			reservation.setTime(time);
 			
 			tx.commit();
 		} catch(Exception e) {
