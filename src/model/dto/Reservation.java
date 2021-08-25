@@ -34,11 +34,11 @@ public class Reservation {
 	@Column(name="member_cnt")
 	private int memberCnt;
 	
-	@ManyToOne//객체의 primary key 값을 자동 참조. name 태그는 컬럼명을 정의해 줄 뿐임.
+	@ManyToOne(fetch=FetchType.EAGER)//객체의 primary key 값을 자동 참조. name 태그는 컬럼명을 정의해 줄 뿐임.
 	@JoinColumn(name="attraction_id")
 	private Attraction attraction;
 
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="customer_id")
 	private Customer customer;
 

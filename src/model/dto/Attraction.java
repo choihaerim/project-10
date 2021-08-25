@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -43,6 +44,6 @@ public class Attraction {
 	@Column(name="parent_yn")
 	private String parentYN;
 	
-	@OneToMany(mappedBy="attraction")
+	@OneToMany(mappedBy="attraction",  fetch = FetchType.EAGER)
 	List<Reservation> reservations = new ArrayList<>();
 }
