@@ -30,8 +30,6 @@ public class AttractionDAO {
 			em.persist(attraction);
 			tx.commit();
 
-			em.close();
-			em = null;
 
 			return attraction;
 		} catch (Exception e) {
@@ -62,8 +60,7 @@ public class AttractionDAO {
 	public static List<Attraction> findByName(String name) {
 		EntityManager em = PublicCommon.getEntityManager();
 		try {
-			List<Attraction> all = em.createNamedQuery("Attraction.findByName").setParameter("name", name)
-					.getResultList();
+			List<Attraction> all = em.createNamedQuery("Attraction.findByName").setParameter("name", name).getResultList();
 			return all;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -75,17 +72,14 @@ public class AttractionDAO {
 	}
 
 	// Update 놀이기구 이름, 키 제한, 보호자 동반 여부
-	public static void updateName(Long id, String name, String location, int heightLimit, String parentYN) {
+	public static void updateName(Long id, int heightLimit) {
 		EntityManager em = PublicCommon.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		try {
 
 			tx.begin();
 			Attraction attraction = em.find(Attraction.class, id);
-			attraction.setName(name);
-			attraction.setLocation(location);
 			attraction.setHeightLimit(heightLimit);
-			attraction.setParentYN(parentYN);
 
 			tx.commit();
 		} catch (Exception e) {

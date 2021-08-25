@@ -119,15 +119,15 @@ public class Controller {
 					findByName(str);
 					break;
 				case 3:
-					System.out.println("id/놀이기구 이름");
+					System.out.println("id/바꿀 키 제한");
 					str = br.readLine();
 					String[] str3 = str.split("/");
-					updateName(Long.parseLong(str3[0]), str3[1]);
+					updateName(Long.parseLong(str3[0]), Integer.parseInt(str3[1]));
 					break;
 				case 4:
 					System.out.println("id");
 					Long id = Long.parseLong(br.readLine());
-					deleteById(id);
+					deleteByIdAttraction(id);
 					break;
 				}
 				break;
@@ -227,6 +227,14 @@ public class Controller {
 					+ attraction.getLocation() + "] 키 제한 : [" + attraction.getHeightLimit() + "] 보호자 동반 여부 : "
 					+ attraction.getParentYN());
 		}
+	}
+	
+	public static void updateName(Long id,int heightLimit) {
+		AttractionDAO.updateName(id, heightLimit);
+	}
+	
+	public static void deleteByIdAttraction(Long id) {
+		AttractionDAO.deleteById(id);
 	}
 	
 	public static void findByName(String name) {

@@ -1,13 +1,9 @@
 package model.dao;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
-
-import org.junit.jupiter.api.Test;
 
 import model.dto.Attraction;
 import model.dto.Customer;
