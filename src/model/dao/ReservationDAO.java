@@ -4,6 +4,8 @@ import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
+import java.sql.SQLException;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -11,6 +13,7 @@ import javax.persistence.EntityTransaction;
 import org.junit.jupiter.api.Test;
 
 import model.dto.Customer;
+import model.dto.Attraction;
 import model.dto.Reservation;
 import util.PublicCommon;
 
@@ -41,7 +44,6 @@ public class ReservationDAO {
 //			cus1.setAlarmYN("n");
 //			
 //			reservation.setCustomer(cus1);
-
 			reservation.setCustomer(res.getCustomer());
 			reservation.setAttraction(res.getAttraction());
 
@@ -80,7 +82,8 @@ public class ReservationDAO {
 	 * @param reservationId
 	 * @return reservation
 	 */
-	public static Reservation getOneReservation(Long reservationId) {
+	
+	public static Reservation getReservation(int reservationId) {
 		EntityManager em = PublicCommon.getEntityManager();
 		Reservation reservation = null;
 		try {
@@ -94,12 +97,7 @@ public class ReservationDAO {
 		return reservation;
 	}
 
-//	@Test
-	public void m1() throws SQLException {
-		Reservation r = getOneReservation(2l);
-		System.out.println("||" + "예약번호 : " + r.getReservationId() + "||" + "예약인원 : " + r.getMemberCnt() + "명" + "||"
-				+ "예약시간 : " + r.getTime() + "||" + "예약 취소 가능 여부 : " + r.getCancelYN() + "||");
-	}
+
 
 	/**
 	 * 모든 예약정보 가져오기
@@ -134,10 +132,33 @@ public class ReservationDAO {
 	 * 예약정보 수정하기
 	 */
 	public static void updateReservation() {
+
+	}
+
+	public static List<Reservation> getAllReservations() throws SQLException {
+		EntityManager em = PublicCommon.getEntityManager();
+
+		String jpql = "select r from Reservation r";
+		List<Reservation> all = em.createQuery(jpql).getResultList();
+		all.forEach(v -> System.out.println("=============\n" + "- 예약 ID : " + v.getReservationId()
+				+ "\n- 놀이기구 이름 : " + v.getAttraction().getName() + "\n- 인원수 : " + v.getMemberCnt()
+				+ "\n- 취소 가능 여부 : " + v.getCancelYN() + "\n- 예약자 이름: " + v.getCustomer().getName()
+				+ "\n- 예약 시간: " + v.getTime()));
+
+		em.close();
+		em = null;
+
+		return all;
+	}
+
+	public static void deleteReservation(int reservationId) {
 		EntityManager em = PublicCommon.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 		try {
+			Reservation reservation = em.find(Reservation.class, reservationId);
+
+			em.remove(reservation);
 
 			tx.commit();
 		} catch (Exception e) {
@@ -148,7 +169,7 @@ public class ReservationDAO {
 			em = null;
 		}
 	}
-
+	
 //	@Test
 	public void m3() throws SQLException {
 		EntityManager em = PublicCommon.getEntityManager();
@@ -178,6 +199,23 @@ public class ReservationDAO {
 
 			tx.commit();
 		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	// reservation id로 예약한 놀이기구 수정
+	public static void updateReservation(int reservationId, Attraction attraction) {
+		EntityManager em = PublicCommon.getEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		tx.begin();
+		
+		Reservation reservation = null;
+		
+		try {
+			reservation = em.find(Reservation.class, reservationId);
+			reservation.setAttraction(attraction);
+			
+			tx.commit();
+		} catch(Exception e) {
 			tx.rollback();
 			e.printStackTrace();
 		} finally {
@@ -200,5 +238,4 @@ public class ReservationDAO {
 		List<Reservation> rs = ReservationDAO.getAllReservation();
 		rs.stream().forEach(v -> System.out.println(v)); // 주소값..........
 	}
-
 }
