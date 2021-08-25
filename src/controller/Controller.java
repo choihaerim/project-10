@@ -9,6 +9,7 @@ import java.util.Scanner;
 
 import javax.persistence.EntityManager;
 
+import model.dao.AttractionDAO;
 import model.dao.CustomerDAO;
 import model.dao.ReservationDAO;
 import model.dto.Attraction;
@@ -38,7 +39,6 @@ public class Controller {
 		try {
 			EndView.showResListView(ReservationDAO.getAllReservation());
 		} catch (Exception e) {
-			e.printStackTrace();
 			EndView.showError("오류가 발생했습니다");
 		}
 	}
@@ -101,9 +101,38 @@ public class Controller {
 			String str = "";
 
 			switch (a) {
-			case 1:// 해림영역
+			case 1://해림영역
+				System.out.println("============Attraction CRUD============");
+				System.out.println("C:1/R:2/U:3/D:4");
+				a = Integer.parseInt(br.readLine());
+				switch (a) {
+				case 1:
+					System.out.println("놀이기구 이름/놀이기구 위치/키 제한/ 보호자 동반 여부(y or n)");
+					str = br.readLine();
+					String[] str2 = str.split("/");
+					insertAttraction(str2[0], str2[1],Integer.parseInt(str2[2]), str2[3]);
+					break;
+				case 2:
+					selectAllAttraction();
+					System.out.println("이름을 입력하면 해당 이름을 가진 놀이기구를 모두 찾음.");
+					str = br.readLine();
+					findByName(str);
+					break;
+				case 3:
+					System.out.println("id/놀이기구 이름");
+					str = br.readLine();
+					String[] str3 = str.split("/");
+					updateName(Long.parseLong(str3[0]), str3[1]);
+					break;
+				case 4:
+					System.out.println("id");
+					Long id = Long.parseLong(br.readLine());
+					deleteById(id);
+					break;
+				}
 				break;
 			case 2:// 기환영역
+				System.out.println("C:1/R:2/U:3/D:4");
 				a = Integer.parseInt(br.readLine());
 				switch (a) {
 				case 1:
@@ -185,7 +214,21 @@ public class Controller {
 					+ customer.getReservations());
 		}
 	}
+	private static void insertAttraction(String name, String location, int heightLimit, String parentYN) {
+		Attraction attraction = AttractionDAO.insertAttraction(name, location, heightLimit, parentYN);
+		System.out.println(attraction + "삽입 완료");
+	}
+	
+	public static void selectAllAttraction() {
+		List<Attraction> all = AttractionDAO.selectAllAttraction();
 
+		for (Attraction attraction : all) {
+			System.out.println("놀이기구 번호 : [" + attraction.getAttractionId() + "] 놀이기구 이름 : [" + attraction.getName() + "] 놀이기구 위치 : ["
+					+ attraction.getLocation() + "] 키 제한 : [" + attraction.getHeightLimit() + "] 보호자 동반 여부 : "
+					+ attraction.getParentYN());
+		}
+	}
+	
 	public static void findByName(String name) {
 		List<Customer> all = CustomerDAO.findByName(name);
 		all.stream().forEach(v -> System.out.println(v));
