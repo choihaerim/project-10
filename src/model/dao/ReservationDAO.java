@@ -1,6 +1,13 @@
+/**
+ * PROJECT : 놀이기구 사전 예약 프로그램
+ * NAME : ReservationDAO.java
+ * DESC : 예약(Reservation) CRUD 로직
+ * 
+ * @author  정은진(B), 방지원
+ * @version 1.0
+ */
 package model.dao;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -12,10 +19,8 @@ import model.dto.Reservation;
 import util.PublicCommon;
 
 public class ReservationDAO {
-	/**
-	 * 새로운 예약 저장하기
-	 * @param attractionId, customerId, time, cnt
-	 */
+	
+	/** Create */
 	public static void addReservation(Long aId, Long cId, String time, int cnt) {
 		EntityManager em = PublicCommon.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -39,30 +44,7 @@ public class ReservationDAO {
 		}
 	}
 
-	
-	/**
-	 * 예약정보 하나 불러오기
-	 * 
-	 * @param reservationId
-	 * @return reservation
-	 */
-	public static Reservation getOneReservation(Long reservationId) {
-		EntityManager em = PublicCommon.getEntityManager();
-		Reservation reservation = null;
-		try {
-			reservation = em.find(Reservation.class, reservationId);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			em.close();
-			em = null;
-		}
-		return reservation;
-	}
-
-	/**
-	 * 모든 예약정보 가져오기
-	 */
+	/** Select all */
 	public static List<Reservation> getAllReservation() {
 		EntityManager em = PublicCommon.getEntityManager();
 		List<Reservation> allreservations = null;
@@ -75,19 +57,51 @@ public class ReservationDAO {
 			em.close();
 			em = null;
 		}
-		return allreservations;
+		return allreservations; //
+	}
+	
+	/** Select */
+	public static Reservation getOneReservation(Long id) {
+		EntityManager em = PublicCommon.getEntityManager();
+		Reservation reservation = null;
+		try {
+			reservation = em.find(Reservation.class, id);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			em.close();
+			em = null;
+		}
+		return reservation; //
 	}
 
-	/**
-	 *Reservation id로 예약 삭제하기
-	 *@param reservationId 
-	 */
-	public static void deleteReservation(Long reservationId) {
+	/** Update */
+	public static void updateReservationTime(Long id, String time) {
+		EntityManager em = PublicCommon.getEntityManager();
+		EntityTransaction tx = em.getTransaction();
+		tx.begin();
+//		Reservation reservation = null;
+		try {
+			Reservation reservation = em.find(Reservation.class, id);
+			reservation.setTime(time);
+			
+			tx.commit();
+		} catch(Exception e) {
+			tx.rollback();
+			e.printStackTrace();
+		} finally {
+			em.close();
+			em = null;
+		}
+	}
+
+	/** Delete */
+	public static void deleteReservation(Long id) {
 		EntityManager em = PublicCommon.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 		try {
-			Reservation reservation = em.find(Reservation.class, reservationId);
+			Reservation reservation = em.find(Reservation.class, id);
 
 			em.remove(reservation);
 
@@ -101,30 +115,4 @@ public class ReservationDAO {
 		}
 	}
 	
-
-	/**
-	 * reservation id로 예약시간 수정
-	 * @param reservationId, time
-	 * */
-	public static void updateReservation(Long reservationId, String time) {
-		EntityManager em = PublicCommon.getEntityManager();
-		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-		
-		Reservation reservation = null;
-		
-		try {
-			reservation = em.find(Reservation.class, reservationId);
-			reservation.setTime(time);
-			
-			tx.commit();
-		} catch(Exception e) {
-			tx.rollback();
-			e.printStackTrace();
-		} finally {
-			em.close();
-			em = null;
-		}
-	}
-
 }

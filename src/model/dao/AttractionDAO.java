@@ -1,3 +1,11 @@
+/**
+ * PROJECT : 놀이기구 사전 예약 프로그램
+ * NAME : AttractionDAO.java
+ * DESC : 놀이기구(Attraction) CRUD 로직
+ * 
+ * @author  최해림
+ * @version 1.0
+ */
 package model.dao;
 
 import java.util.List;
@@ -5,22 +13,17 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
-import org.junit.jupiter.api.Test;
-
 import model.dto.Attraction;
 import util.PublicCommon;
 
 public class AttractionDAO {
-
-	// Insert 놀이기구 이름, 놀이기구 위치, 키 제한, 보호자 동반 여부
-	public static Attraction insertAttraction(String name, String location, int heightLimit, String yn) {
-
+	
+	/** Create */
+	public static Attraction addAttraction(String name, String location, int heightLimit, String yn) {
 		EntityManager em = PublicCommon.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
+		tx.begin();
 		try {
-
-			tx.begin();
-
 			Attraction attraction = new Attraction();
 			attraction.setName(name);
 			attraction.setLocation(location);
@@ -28,22 +31,21 @@ public class AttractionDAO {
 			attraction.setParentYN(yn);
 
 			em.persist(attraction);
+			
 			tx.commit();
-
-
 			return attraction;
 		} catch (Exception e) {
 			tx.rollback();
 			e.printStackTrace();
-			return null;
+			return null; //
 		} finally {
 			em.close();
 			em = null;
 		}
 	}
 
-	// Select (Read)
-	public static List<Attraction> selectAllAttraction() {
+	/** Select all */
+	public static List<Attraction> getAllAttraction() {
 		EntityManager em = PublicCommon.getEntityManager();
 		try {
 			List<Attraction> all = em.createQuery("select a from Attraction a", Attraction.class).getResultList();
@@ -57,7 +59,8 @@ public class AttractionDAO {
 		}
 	}
 
-	public static List<Attraction> findByName(String name) {
+	/** Select */
+	public static List<Attraction> getOneAttraction(String name) {
 		EntityManager em = PublicCommon.getEntityManager();
 		try {
 			List<Attraction> all = em.createNamedQuery("Attraction.findByName").setParameter("name", name).getResultList();
@@ -71,13 +74,12 @@ public class AttractionDAO {
 		}
 	}
 
-	// Update 놀이기구 이름, 키 제한, 보호자 동반 여부
-	public static void updateName(Long id, int heightLimit) {
+	/** Update */
+	public static void updateAttractionHeightLimit(Long id, int heightLimit) {
 		EntityManager em = PublicCommon.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
+		tx.begin();
 		try {
-
-			tx.begin();
 			Attraction attraction = em.find(Attraction.class, id);
 			attraction.setHeightLimit(heightLimit);
 
@@ -91,14 +93,16 @@ public class AttractionDAO {
 		}
 	}
 
-	// Delete
-	public static void deleteById(Long id) {
+	/** Delete */
+	public static void deleteAttraction(Long id) {
 		EntityManager em = PublicCommon.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
+		tx.begin();
 		try {
-			tx.begin();
 			Attraction attraction = em.find(Attraction.class, id);
+			
 			em.remove(attraction);
+			
 			tx.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -108,24 +112,5 @@ public class AttractionDAO {
 			em = null;
 		}
 	}
-
-	@Test
-	void runTest() {
-		EntityManager em = PublicCommon.getEntityManager();
-		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-		
-		Attraction att1 = new Attraction();
-
-		att1.setName("범퍼카");
-		att1.setLocation("B1");
-		att1.setHeightLimit(120);
-		att1.setParentYN("y");
-
-		em.persist(att1);
-
-		tx.commit();
-		em.close();
-		em = null;
-	}
+	
 }
