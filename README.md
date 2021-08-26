@@ -40,9 +40,9 @@
 
 - 신지혜님
 
-    1) persistence.xml 에서 콘솔에 Hibernate 출력 부분 고민 요망
+    1)  콘솔에 Hibernate 출력 부분 고민 요망
 
-    #️⃣해결점 → show_sql : false로 수정
+    #️⃣해결점 → persistence.xml 에서 show_sql : false로 수정
 
     2) 클래스와 메소드 설명 주석부분이 깔끔해서 좋습니다
 
