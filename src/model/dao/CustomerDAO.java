@@ -1,3 +1,11 @@
+/**
+ * PROJECT : 놀이기구 사전 예약 프로그램
+ * NAME : CustomerDAO.java
+ * DESC : 고객(Customer) CRUD 로직
+ * 
+ * @author  이기환
+ * @version 1.0
+ */
 package model.dao;
 
 import java.util.List;
@@ -5,36 +13,30 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
-import model.dto.Attraction;
 import model.dto.Customer;
-import model.dto.Reservation;
 import util.PublicCommon;
 
 public class CustomerDAO {
-	/**
-	 * Create(Insert)
-	 */
-	public static Customer insertCustomer(String name, int height, String yn) {
-
+	
+	/** Create */
+	public static Customer addCustomer(String name, int height, String yn) {
 		EntityManager em = PublicCommon.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
-		try {
-
 		tx.begin();
-
-		Customer customer = new Customer();
-		customer.setName(name);
-		customer.setHeight(height);
-		customer.setAlarmYN(yn);
-
-		em.persist(customer);
-		tx.commit();
-
-		return customer;
+		try {
+			Customer customer = new Customer();
+			customer.setName(name);
+			customer.setHeight(height);
+			customer.setAlarmYN(yn);
+	
+			em.persist(customer);
+			
+			tx.commit();
+			return customer;
 		}catch(Exception e){
 			tx.rollback();
 			e.printStackTrace();
-			return null;
+			return null; //
 		}finally {
 			em.close();
 			em = null;
@@ -42,11 +44,8 @@ public class CustomerDAO {
 
 	}
 
-	/**
-	 * Read(Select)
-	 */
-	// select c from Customer c;
-	public static List<Customer> selectAllCustomer() {
+	/** Select all */
+	public static List<Customer> getAllCustomer() {
 		EntityManager em = PublicCommon.getEntityManager();
 		try {
 			List<Customer> all = em.createQuery("select c from Customer c", Customer.class).getResultList();
@@ -60,8 +59,8 @@ public class CustomerDAO {
 		}
 	}
 
-	// "select c from Customer c where c.name=:name", name="Customer.findByName"
-	public static List<Customer> findByName(String name) {
+	/** Select */
+	public static List<Customer> getOneCustomer(String name) {
 		EntityManager em = PublicCommon.getEntityManager();
 		try {
 			List<Customer> all = em.createNamedQuery("Customer.findByName").setParameter("name", name).getResultList();
@@ -75,14 +74,12 @@ public class CustomerDAO {
 		}
 	}
 
-	/**
-	 * Update
-	 */
-	public static void updateName(Long id, String name) {
+	/** Update */
+	public static void updateCustomerName(Long id, String name) {
 		EntityManager em = PublicCommon.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
+		tx.begin();
 		try {
-			tx.begin();
 			Customer customer = em.find(Customer.class, id);
 			customer.setName(name);
 
@@ -96,17 +93,17 @@ public class CustomerDAO {
 		}
 	}
 
-	/**
-	 * Delete
-	 */
-	public static void deleteById(Long id) {
+	/** Delete */
+	public static void deleteCustomer(Long id) {
 		EntityManager em = PublicCommon.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
-		try {
 		tx.begin();
-		Customer customer = em.find(Customer.class, id);
-		em.remove(customer);
-		tx.commit();
+		try {
+			Customer customer = em.find(Customer.class, id);
+			
+			em.remove(customer);
+			
+			tx.commit();
 		}catch(Exception e) {
 			e.printStackTrace();
 			tx.rollback();
@@ -115,24 +112,5 @@ public class CustomerDAO {
 			em = null;
 		}
 	}
-
-//	@Test
-	void runTest() {
-		EntityManager em = PublicCommon.getEntityManager();
-		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-		Reservation res1 = new Reservation();
-		Customer cus1 = em.find(Customer.class, 1l);
-		Attraction att1 = em.find(Attraction.class, 1l);
-
-		res1.setMemberCnt(3);
-		res1.setTime("10:22");
-		res1.setAttraction(att1);
-		res1.setCustomer(cus1);
-		em.persist(res1);
-
-		tx.commit();
-		em.close();
-		em = null;
-	}
+	
 }
