@@ -26,7 +26,6 @@ public class Controller {
 	
 	/**
 	 * 고객 이름으로 정보 조회
-	 * 
 	 * @param name
 	 */
 	public static void getOneCustomer(String name) {
@@ -36,7 +35,6 @@ public class Controller {
 
 	/**
 	 * 고객 정보 수정
-	 * 
 	 * @param id, name
 	 */
 	public static void updateCustomer(Long id, String name) {
@@ -45,7 +43,6 @@ public class Controller {
 
 	/**
 	 * 고객 정보 삭제
-	 * 
 	 * @param id
 	 */
 	public static void deleteCustomer(Long id) {
@@ -54,7 +51,6 @@ public class Controller {
 
 	/**
 	 * 놀이기구 정보 추가
-	 * 
 	 * @param name, location, heightLimit, parentYN
 	 */
 	private static void addAttraction(String name, String location, int heightLimit, String parentYN) {
@@ -116,10 +112,9 @@ public class Controller {
 		for (Customer customer : all) {
 			System.out.println("회원번호 : " + customer.getCustomerId() + " 회원이름 : " + customer.getName() + " 키 : "
 					+ customer.getHeight() + "cm 알림동의여부 : " + customer.getAlarmYN() + "에약 내역 : "
-					+ customer.getReservations()); //
+					+ customer.getReservations());
 		}
 	}
-	
 	
 	/**
 	 * 신규 예약 추가

@@ -7,11 +7,7 @@ import model.dto.Customer;
 import model.dto.Reservation;
 
 public class EndView {
-	public static void showAttrListView(List<Attraction> attractionList) {
-		
-	}
 	
-
 	public static void showResListView(List<Reservation> reservationList) {
 		reservationList.forEach(v -> System.out.println("=============\n" + "- 예약 번호 : " + v.getReservationId()
 				+ "\n- 놀이기구 이름 : " + v.getAttraction().getName() + "\n- 예약 인원 수 : " + v.getMemberCnt()
@@ -50,4 +46,5 @@ public class EndView {
 	public static void showError(String msg) {
 		System.out.println(msg);
 	}
+	
 }

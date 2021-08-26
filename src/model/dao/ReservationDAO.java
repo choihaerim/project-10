@@ -11,11 +11,8 @@ import model.dto.Reservation;
 import util.PublicCommon;
 
 public class ReservationDAO {
-	/**
-	 * 새로운 예약 저장하기
-	 * 
-	 * @param attractionId, customerId, time, cnt
-	 */
+	
+	/** Create */
 	public static boolean addReservation(Long aId, Long cId, String time, int cnt) {
 		EntityManager em = PublicCommon.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -38,7 +35,6 @@ public class ReservationDAO {
 				tx.commit();
 				
 				return true;
-				
 			} 
 		} catch (Exception e) {
 			tx.rollback();
@@ -49,13 +45,7 @@ public class ReservationDAO {
 		} return false;
 	}
 
-	/**
-	 * 예약정보 하나 불러오기
-	 * 
-	 * @param reservationId
-	 * @return reservation
-	 */
-
+	/** Select all */
 	public static Reservation getOneReservation(Long reservationId) {
 		EntityManager em = PublicCommon.getEntityManager();
 		Reservation reservation = null;
@@ -70,9 +60,7 @@ public class ReservationDAO {
 		return reservation;
 	}
 
-	/**
-	 * 모든 예약정보 가져오기
-	 */
+	/** Select */
 	public static List<Reservation> getAllReservation() {
 		EntityManager em = PublicCommon.getEntityManager();
 		List<Reservation> allreservations = null;
@@ -88,11 +76,7 @@ public class ReservationDAO {
 		return allreservations;
 	}
 
-	/**
-	 * Reservation id로 예약 삭제하기
-	 * 
-	 * @param reservationId
-	 */
+	/** Update */
 	public static void deleteReservation(Long reservationId) {
 		EntityManager em = PublicCommon.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
@@ -112,11 +96,7 @@ public class ReservationDAO {
 		}
 	}
 
-	/**
-	 * reservation id로 예약시간 수정
-	 * 
-	 * @param reservationId, time
-	 */
+	/** Delete */
 	public static void updateReservation(Long reservationId, String time) {
 		EntityManager em = PublicCommon.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
