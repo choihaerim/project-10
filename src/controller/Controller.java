@@ -1,9 +1,17 @@
+/**
+ * PROJECT : 놀이기구 사전 예약 프로그램
+ * NAME : Controller.java
+ * DESC : 사용자로 부터 받은 요청을 처리하는 클래스
+ * 		  Model 갱신 및 View 제어
+ * 
+ * @author  최해림, 정은진(B), 이기환, 방지원
+ * @version 1.0
+ */
 package controller;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.sql.SQLException;
 import java.util.List;
 
 import model.dao.AttractionDAO;
@@ -55,11 +63,15 @@ public class Controller {
 	}
 
 	/**
-	 * 모든 놀이기구 정보 조회
+	 * 모든 놀이기구 조회
 	 */
 	public static void getAllAttractions() {
-		EndView.showAttListView(AttractionDAO.getAllAttraction());
-
+		List<Attraction> all = AttractionDAO.getAllAttraction();
+		for (Attraction attraction : all) {
+			System.out.println("놀이기구 번호 : [" + attraction.getAttractionId() + "] 놀이기구 이름 : [" + attraction.getName() + "] 놀이기구 위치 : ["
+					+ attraction.getLocation() + "] 키 제한 : [" + attraction.getHeightLimit() + "] 보호자 동반 여부 : "
+					+ attraction.getParentYN());
+		}
 	}
 	
 	/**
@@ -70,26 +82,47 @@ public class Controller {
 		List<Attraction> all = AttractionDAO.getOneAttraction(name);
 		all.stream().forEach(v -> System.out.println(v));
 	}
-
+	
 	/**
-	 * 놀이기구 정보 수정
-	 * 
+	 * 고유 id값을 받아 놀이기구 제한 신장(키) 수정
 	 * @param id, heightLimit
 	 */
-	public static void updateAttraction(Long id, int heightLimit) {
+	public static void updateAttraction(Long id,int heightLimit) {
 		AttractionDAO.updateAttractionHeightLimit(id, heightLimit);
 	}
-
+	
 	/**
-	 * 놀이기구 정보 삭제
+	 * 고유 id값으로 놀이기구 삭제
+	 * @param id
 	 */
 	public static void deleteAttraction(Long id) {
 		AttractionDAO.deleteAttraction(id);
 	}
+	
+	/**
+	 * 신규 고객 추가
+	 * @param name, height, yn
+	 */
+	public static void addCustomer(String name, int height, String yn) {
+		Customer customer = CustomerDAO.addCustomer(name, height, yn);
+		System.out.println(customer + "삽입 완료");
+	}
 
 	/**
-	 * 예약 추가하기
-	 * 
+	 * 모든 고객 정보 조회
+	 */
+	public static void getAllCustomers() {
+		List<Customer> all = CustomerDAO.getAllCustomer();
+		for (Customer customer : all) {
+			System.out.println("회원번호 : " + customer.getCustomerId() + " 회원이름 : " + customer.getName() + " 키 : "
+					+ customer.getHeight() + "cm 알림동의여부 : " + customer.getAlarmYN() + "에약 내역 : "
+					+ customer.getReservations()); //
+		}
+	}
+	
+	
+	/**
+	 * 신규 예약 추가
 	 * @param reservation
 	 */
 	public static void addReservation(Long attractionId, Long customerId, String time, int cnt) {
@@ -124,9 +157,8 @@ public class Controller {
 	}
 
 	/**
-	 * 예약 정보 하나 조회하기
-	 * 
-	 * @param reservationId
+	 * 고유 id로 예약정보 조회
+	 * @param id
 	 */
 	public static void getOneReservation(Long reservationId) {
 		Reservation reservation = ReservationDAO.getOneReservation(reservationId);
@@ -143,9 +175,8 @@ public class Controller {
 	}
 
 	/**
-	 * 예약 수정하기
-	 * 
-	 * @param reservationId, attraction
+	 * 고유 id로 예약시간 수정하기
+	 * @param id, attraction
 	 */
 	public static void updateReservation(Long reservationId, String time) {
 		Reservation reservation = ReservationDAO.getOneReservation(reservationId);
@@ -162,25 +193,22 @@ public class Controller {
 	}
 
 	/**
-	 * 예약정보 취소하기
-	 * 
-	 * @throws SQLException
+	 * 고유 id로 예약 취소하기
+	 * @param id
 	 */
 	public static void deleteReservation(Long reservId) {
 		System.out.println("삭제 전 검색해보기");
 		EndView.allView(ReservationDAO.getOneReservation(reservId));
-
 		ReservationDAO.deleteReservation(reservId);
 
 		System.out.println("삭제 후 남은 예약리스트 검색해보기");
 		EndView.showResListView(ReservationDAO.getAllReservation());
 	}
 
+	
 	/**
-	 * 시작 메뉴
-	 * 
-	 * @throws SQLException
-	 * @throws NumberFormatException
+	 * 실행 메뉴
+	 * @throws IOException
 	 */
 	public static void startView() throws IOException, NumberFormatException {
 		System.out.println("기능 선택 : 놀이기구 관련(1) / 고객 관련(2) / 예약 관련(3)");
@@ -226,7 +254,7 @@ public class Controller {
 				a = Integer.parseInt(br.readLine());
 				switch (a) {
 				case 1:
-					System.out.println("이름/키/알람여부(y or n)");
+					System.out.println(" 이름 / 키 / 알람여부(y or n) ");
 					str = br.readLine();
 					String[] str2 = str.split("/");
 					addCustomer(str2[0], Integer.parseInt(str2[1]), str2[2]);
@@ -261,17 +289,17 @@ public class Controller {
 					addReservation(Long.parseLong(str1[0]), Long.parseLong(str1[1]), str1[2],
 							Integer.parseInt(str1[3]));
 					break;
-				case 2: 
+				case 2:
 					getAllReservations();
 					break;
-				case 3: 
-					System.out.println("id/이름");
+				case 3:
+					System.out.println("예약번호입력");
 					str = br.readLine();
 					String[] str2 = str.split("/");
 					getOneReservation(Long.parseLong(str2[0]));
 					break;
-				case 4: 
-					System.out.println("id/time");
+				case 4:
+					System.out.println("id / 수정 후 예약 시간");
 					str = br.readLine();
 					String[] str3 = str.split("/");
 					updateReservation(Long.parseLong(str3[0]), str3[1]);
@@ -289,28 +317,5 @@ public class Controller {
 			br.close();
 		}
 	}
-
-	/**
-	 * 고객 정보 추가
-	 * 
-	 * @param name, height, yn
-	 */
-	public static void addCustomer(String name, int height, String yn) {
-		Customer customer = CustomerDAO.addCustomer(name, height, yn);
-		System.out.println(customer + "삽입 완료");
-	}
-
-	/**
-	 * 모든 고객 정보 조회
-	 */
-	public static void getAllCustomers() {
-		try {
-			EndView.showCusListView(CustomerDAO.getAllCustomer());
-		} catch (Exception e) {
-			EndView.showError("오류가 발생했습니다.");
-		}
-	}
-
-
 
 }

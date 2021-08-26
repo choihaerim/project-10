@@ -2,25 +2,51 @@ package view;
 
 import java.util.List;
 
+import model.dto.Attraction;
+import model.dto.Customer;
 import model.dto.Reservation;
 
 public class EndView {
-	public static void showResListView(List<Reservation> reservationList) {
-		reservationList.forEach(v -> System.out.println("=============\n" + "- ¿¹¾à ID : " + v.getReservationId()
-				+ "\n- ³îÀÌ±â±¸ ÀÌ¸§ : " + v.getAttraction().getName() + "\n- ÀÎ¿ø¼ö : " + v.getMemberCnt()
-				+ "\n- Ãë¼Ò °¡´É ¿©ºÎ : " + v.getCancelYN() + "\n- ¿¹¾àÀÚ ÀÌ¸§: " + v.getCustomer().getName()
-				+ "\n- ¿¹¾à ½Ã°£: " + v.getTime()));
+	public static void showAttrListView(List<Attraction> attractionList) {
+		
 	}
 	
+
+	public static void showResListView(List<Reservation> reservationList) {
+		reservationList.forEach(v -> System.out.println("=============\n" + "- ì˜ˆì•½ ë²ˆí˜¸ : " + v.getReservationId()
+				+ "\n- ë†€ì´ê¸°êµ¬ ì´ë¦„ : " + v.getAttraction().getName() + "\n- ì˜ˆì•½ ì¸ì› ìˆ˜ : " + v.getMemberCnt()
+				+ "\n- ì˜ˆì•½ì ì´ë¦„ : " + v.getCustomer().getName()
+				+ "\n- ì˜ˆì•½ ì‹œê°„ : " + v.getTime()));
+	}
 	
+	public static void showCusListView(List<Customer> customerList) {
+		for (Customer customer : customerList) {
+			System.out.println("- íšŒì›ë²ˆí˜¸ : " + customer.getCustomerId() + "\n- íšŒì›ì´ë¦„ : " + customer.getName() + "\n- í‚¤ : "
+					+ customer.getHeight() + "\n- cm ì•Œë¦¼ë™ì˜ì—¬ë¶€ : " + customer.getAlarmYN() + "\n- ì˜ˆì•½ ë‚´ì—­ : "
+					+ customer.getReservations());
+		}
+	}
+	
+	public static void showAttListView(List<Attraction> attractionList) {
+		for (Attraction attraction : attractionList) {
+			System.out.println("\n- ë†€ì´ê¸°êµ¬ ë²ˆí˜¸ : " + attraction.getAttractionId() + "\n- ë†€ì´ê¸°êµ¬ ì´ë¦„ : " + attraction.getName() + "\n- ë†€ì´ê¸°êµ¬ ìœ„ì¹˜ : "
+					+ attraction.getLocation() + "\n- í‚¤ ì œí•œ : " + attraction.getHeightLimit() + "\n- ë³´í˜¸ì ë™ë°˜ ì—¬ë¶€ : "
+					+ attraction.getParentYN());
+		}
+	}
+
 	public static void allView(Object data) {
 		if (data != null) {
 			System.out.println(data);
 		} else {
-			System.out.println("Á¤º¸°¡ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù");
+			System.out.println("í•´ë‹¹ ì •ë³´ê°€ ì¡´ì¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.");
 		}
 	}
 	
+	public static void msgView(String msg) {
+		System.out.println(msg);
+	}
+
 	public static void showError(String msg) {
 		System.out.println(msg);
 	}
