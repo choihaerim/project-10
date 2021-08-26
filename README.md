@@ -8,7 +8,7 @@
 
 ## 1. Modeling 🖥️
 
-![Untitled](%F0%9F%8E%A2%20%E1%84%80%E1%85%B5%E1%84%92%E1%85%AA%E1%86%AB%E1%84%85%E1%85%A2%E1%86%AB%E1%84%83%E1%85%B3%20%E1%84%8C%E1%85%AE%E1%86%AF%E1%84%89%E1%85%A5%E1%84%80%E1%85%B5%20dd07dbb08fa54cd1b591447da2dcf5ee/Untitled.png)
+![Untitled](https://user-images.githubusercontent.com/87870107/130889940-fea8bf25-f9a3-4c42-bad7-c374418e445d.png)
 
 ## 2. Function🛠
 
