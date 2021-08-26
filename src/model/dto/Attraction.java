@@ -64,5 +64,4 @@ public class Attraction {
 		return "Attraction [attractionId=" + attractionId + ", name=" + name + ", location=" + location
 				+ ", heightLimit=" + heightLimit + ", parentYN=" + parentYN + ", reservations=" + reservations + "]";
 	}
-	
 }
