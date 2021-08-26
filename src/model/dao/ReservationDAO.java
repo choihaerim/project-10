@@ -9,45 +9,53 @@ import model.dto.Attraction;
 import model.dto.Customer;
 import model.dto.Reservation;
 import util.PublicCommon;
-import view.EndView;
 
 public class ReservationDAO {
 	/**
 	 * 새로운 예약 저장하기
+	 * 
 	 * @param attractionId, customerId, time, cnt
 	 */
-	public static void addReservation(Long aId, Long cId, String time, int cnt) {
+	public static boolean addReservation(Long aId, Long cId, String time, int cnt) {
 		EntityManager em = PublicCommon.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
+
+		Customer cus = em.find(Customer.class, cId);
+		Attraction att = em.find(Attraction.class, aId);
+
 		try {
-			Reservation reservation = new Reservation();
-			
-			reservation.setCustomer(em.find(Customer.class, cId));
-			reservation.setAttraction(em.find(Attraction.class, aId));
-			reservation.setMemberCnt(cnt);
-			reservation.setTime(time);
+			if (cus.getHeight() >= att.getHeightLimit()) {
+				Reservation reservation = new Reservation();
 
-			em.persist(reservation);
+				reservation.setCustomer(cus);
+				reservation.setAttraction(att);
+				reservation.setMemberCnt(cnt);
+				reservation.setTime(time);
 
-			tx.commit();
+				em.persist(reservation);
+
+				tx.commit();
+				
+				return true;
+				
+			} 
 		} catch (Exception e) {
 			tx.rollback();
 			e.printStackTrace();
 		} finally {
 			em.close();
 			em = null;
-		}
+		} return false;
 	}
 
-	
 	/**
 	 * 예약정보 하나 불러오기
 	 * 
 	 * @param reservationId
 	 * @return reservation
 	 */
-	
+
 	public static Reservation getOneReservation(Long reservationId) {
 		EntityManager em = PublicCommon.getEntityManager();
 		Reservation reservation = null;
@@ -61,7 +69,6 @@ public class ReservationDAO {
 		}
 		return reservation;
 	}
-
 
 	/**
 	 * 모든 예약정보 가져오기
@@ -81,10 +88,10 @@ public class ReservationDAO {
 		return allreservations;
 	}
 
-	
 	/**
-	 *Reservation id로 예약 삭제하기
-	 *@param reservationId 
+	 * Reservation id로 예약 삭제하기
+	 * 
+	 * @param reservationId
 	 */
 	public static void deleteReservation(Long reservationId) {
 		EntityManager em = PublicCommon.getEntityManager();
@@ -104,25 +111,25 @@ public class ReservationDAO {
 			em = null;
 		}
 	}
-	
 
 	/**
 	 * reservation id로 예약시간 수정
+	 * 
 	 * @param reservationId, time
-	 * */
+	 */
 	public static void updateReservation(Long reservationId, String time) {
 		EntityManager em = PublicCommon.getEntityManager();
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
-		
+
 		Reservation reservation = null;
-		
+
 		try {
 			reservation = em.find(Reservation.class, reservationId);
 			reservation.setTime(time);
-			
+
 			tx.commit();
-		} catch(Exception e) {
+		} catch (Exception e) {
 			tx.rollback();
 			e.printStackTrace();
 		} finally {
